@@ -3,11 +3,6 @@ package neutron;
 import java.util.ArrayList;
 import java.util.Random;
 
-import neutron.Ball;
-import neutron.GameActivity;
-import neutron.Popup;
-import neutron.Shockwave;
-
 import android.graphics.Point;
 import android.util.Log;
 
@@ -40,12 +35,8 @@ final class Ball implements Runnable
 		gravity = 0;
 
 		int number = rnd.nextInt(3);
-		
-		if (number > 1)
-			goingleft = true;
-		else
-			goingleft = false;
 
+        goingleft = (number > 1);
 		start();
 	}
 
@@ -70,7 +61,7 @@ final class Ball implements Runnable
 		{
 			for (int playercounter = 0; playercounter < player.length; playercounter++) // player collision logic
 			{
-				if ((position.y >= player[playercounter].getPosition().y) && (position.y <= player[playercounter].getPosition().y + gameactivity.getSmileyHeight()) && (position.x >= player[playercounter].getPosition().x) && (position.x <= player[playercounter].getPosition().x + gameactivity.getSmileyWidth()) && (!isGoingUp())) // player to ball collision detection
+				if ((position.y >= player[playercounter].getPosition().y) && (position.y <= player[playercounter].getPosition().y + gameactivity.getSmileyHeight()) && (position.x >= player[playercounter].getPosition().x) && (position.x <= player[playercounter].getPosition().x + gameactivity.getSmileyWidth()) && (isNotGoingUp())) // player to ball collision detection
 				{	
 					climb = -(gravity * 2); // emulate gravity
 					gravity = 0.0f;
@@ -217,9 +208,9 @@ final class Ball implements Runnable
 		this.position = position;
 	}
 
-	public boolean isGoingUp()
+	public boolean isNotGoingUp()
 	{
-		return (pposition.y > position.y);
+		return (pposition.y <= position.y);
 	}
 
 	public boolean isDead()

@@ -39,7 +39,7 @@ final class AI implements Runnable
 				else
 					ball.get(ballcounter).setTargetable(true); // if true ball a valid AI target
 				
-				if ((!ball.get(ballcounter).isDead()) && (!ball.get(ballcounter).isGoingUp()) && (ball.get(ballcounter).isTargetable()) && (ball.get(ballcounter).getPosition().y > target.y))
+				if ((!ball.get(ballcounter).isDead()) && (ball.get(ballcounter).isNotGoingUp()) && (ball.get(ballcounter).isTargetable()) && (ball.get(ballcounter).getPosition().y > target.y))
 					target.set(ball.get(ballcounter).getPosition().x - gameactivity.getSmileyWidth() / 2, ball.get(ballcounter).getPosition().y - gameactivity.getSmileyHeight() / 2); // check for priority target
 			}
 

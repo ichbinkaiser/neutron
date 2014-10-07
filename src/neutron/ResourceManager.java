@@ -18,7 +18,8 @@ final class ResourceManager
 	private AudioManager  audiomanager;
 	private Context context;
 	public int soundsloaded = 0, bitmapsloaded = 0;
-	private RollingObjectBitmap[] buzzballbitmaps = new RollingObjectBitmap[6]; //buzz ball bitmap
+    private int[] drawables = new int[] {R.drawable.buzzball1, R.drawable.buzzball2, R.drawable.buzzball3, R.drawable.buzzball4, R.drawable.buzzball5, R.drawable.buzzball6};
+    private RollingObjectBitmap[] buzzballbitmaps = new RollingObjectBitmap[drawables.length]; //buzz ball bitmap
 	private int[] soundlibrary = new int[] {R.raw.pop, R.raw.lifeup, R.raw.ding, R.raw.popwall, R.raw.down, R.raw.hit, R.raw.restart, R.raw.spawn};
 
 	public int getSoundLibrarySize()
@@ -58,9 +59,6 @@ final class ResourceManager
 	public void loadBitmaps()
 	{
 		Matrix buzzball_matrix = new Matrix();
-
-		int[] drawables = new int[] {R.drawable.buzzball1, R.drawable.buzzball2, R.drawable.buzzball3, R.drawable.buzzball4, R.drawable.buzzball5, R.drawable.buzzball6};
-
 		for (int bitmapindex = 0; bitmapindex < buzzballbitmaps.length; bitmapindex++)
 		{
 			int centerX, centerY, source_width, source_height;
