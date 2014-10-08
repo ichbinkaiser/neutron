@@ -30,13 +30,6 @@ public class MainActivity extends Activity
 		super.onDestroy();
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) 
-	{
-		getMenuInflater().inflate(R.menu.activity_main, menu);
-		return true;
-	}
-
 	public void startGame(View view)
 	{
 		Intent gameIntent = new Intent(this, GameActivity.class);

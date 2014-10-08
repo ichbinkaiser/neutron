@@ -23,13 +23,6 @@ public class SplashActivity extends Activity
         
         loadcheck.start();
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) 
-    {
-        getMenuInflater().inflate(R.menu.activity_splash, menu);
-        return true;
-    }
     
     public void showMain()
 	{	
