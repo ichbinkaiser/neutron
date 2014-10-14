@@ -98,7 +98,8 @@ final public class BuzzBall implements Runnable
 
 			for (int ballcounter = ball.size() - 1; ballcounter >= 0; ballcounter--)
 			{
-				if ((ball.get(ballcounter).getPosition().x >= position.x) && (ball.get(ballcounter).getPosition().x <= position.x + width) && (ball.get(ballcounter).getPosition().y >= position.y) && (ball.get(ballcounter).getPosition().y <= position.y + height))
+                Ball currentball = ball.get(ballcounter);
+				if ((currentball.getPosition().x >= position.x) && (currentball.getPosition().x <= position.x + width) && (currentball.getPosition().y >= position.y) && (currentball.getPosition().y <= position.y + height))
 				{
 					boolean collided = false;
 
@@ -110,17 +111,17 @@ final public class BuzzBall implements Runnable
 					if ((!collided) && (!dying))
 					{
 
-						if (ball.get(ballcounter).isGoingLeft())
+						if (currentball.isGoingLeft())
 						{
-							ball.get(ballcounter).setGoingleft(false);
+                            currentball.setGoingleft(false);
 							xmovement = 2;
 						}
 						else 
 						{
-							ball.get(ballcounter).setGoingleft(true);
+                            currentball.setGoingleft(true);
 							xmovement = -2;
 						}
-						ballcollided.add(ball.get(ballcounter));
+						ballcollided.add(currentball);
 					}
 				}
 			}

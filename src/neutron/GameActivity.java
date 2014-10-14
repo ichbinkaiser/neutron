@@ -63,7 +63,7 @@ public class GameActivity extends Activity implements SensorEventListener
 	private SensorManager sensormanager;
 	private Sensor orientation;
 	private float rollangle = 0;
-	Random rnd = new Random();
+	private Random rnd = new Random();
 
 	private Player[] player; // set Players array
 	private AI ai; // set AI
@@ -547,20 +547,22 @@ public class GameActivity extends Activity implements SensorEventListener
 
 			for (int ballcounter = ball.size() - 1; ballcounter >= 0; ballcounter--) // ball drawer
 			{
-				if (ball.get(ballcounter).isDead())
+                Ball currentball = ball.get(ballcounter);
+				if (currentball.isDead())
 					ball.remove(ballcounter);
 				else
-					canvas.drawCircle(ball.get(ballcounter).getPosition().x, ball.get(ballcounter).getPosition().y, ballsize, pint);
+					canvas.drawCircle(currentball.getPosition().x, currentball.getPosition().y, ballsize, pint);
 			}
 
 			for (int trailcounter = trail.size() - 1; trailcounter >= 0; trailcounter--) // trail drawer
 			{
-				if (trail.get(trailcounter).getCounter() > 0)
+                Trail currenttrail = trail.get(trailcounter);
+				if (currenttrail.getCounter() > 0)
 				{
-					balltrail.setStrokeWidth(ballsize - trail.get(trailcounter).calcSize());
-					balltrail.setColor(Color.argb(trail.get(trailcounter).getCounter() * 25, 255, 255, 255));
-					canvas.drawLine(trail.get(trailcounter).getStartPoint().x, trail.get(trailcounter).getStartPoint().y, trail.get(trailcounter).getEndPoint().x, trail.get(trailcounter).getEndPoint().y, balltrail);
-					trail.get(trailcounter).setCounter(trail.get(trailcounter).getCounter() - 1);
+					balltrail.setStrokeWidth(ballsize - currenttrail.calcSize());
+					balltrail.setColor(Color.argb(currenttrail.getCounter() * 25, 255, 255, 255));
+					canvas.drawLine(currenttrail.getStartPoint().x, currenttrail.getStartPoint().y, currenttrail.getEndPoint().x, currenttrail.getEndPoint().y, balltrail);
+                    currenttrail.setCounter(currenttrail.getCounter() - 1);
 				}
 				else
 					trail.remove(trailcounter); // remove dead trail
@@ -568,35 +570,31 @@ public class GameActivity extends Activity implements SensorEventListener
 
 			for (int shockwavecounter = shockwave.size() - 1; shockwavecounter >= 0; shockwavecounter--)  // shockwave drawer
 			{
-				if (shockwave.get(shockwavecounter).getCounter() > 0) // bump animation
+                Shockwave currentshockwave = shockwave.get(shockwavecounter);
+				if (currentshockwave.getLife() > 0) // bump animation
 				{
-					switch (shockwave.get(shockwavecounter).getType())
+                    int currentshockwavelife = currentshockwave.getLife();
+					switch (currentshockwave.getType())
 					{
 					case 0: // is small wave animation
-						circlestrokepaint.setColor(Color.argb(shockwave.get(shockwavecounter).getCounter() * 23,255, 255, 255));
+						circlestrokepaint.setColor(Color.argb(currentshockwavelife * 23,255, 255, 255));
 						circlestrokepaint.setStrokeWidth(1);
-						canvas.drawCircle(shockwave.get(shockwavecounter).getPosition().x, shockwave.get(shockwavecounter).getPosition().y,11 - shockwave.get(shockwavecounter).getCounter(), circlestrokepaint);
-						shockwave.get(shockwavecounter).setCounter(shockwave.get(shockwavecounter).getCounter() - 1);
+						canvas.drawCircle(currentshockwave.getPosition().x, currentshockwave.getPosition().y,11 - currentshockwavelife, circlestrokepaint);
 						break;
 					case 1: // is medium wave animation
-						circlestrokepaint.setColor(Color.argb(shockwave.get(shockwavecounter).getCounter() * 12, 255, 255, 255));
+						circlestrokepaint.setColor(Color.argb(currentshockwavelife * 12, 255, 255, 255));
 						circlestrokepaint.setStrokeWidth(2);
-						canvas.drawCircle(shockwave.get(shockwavecounter).getPosition().x, shockwave.get(shockwavecounter).getPosition().y,21 - shockwave.get(shockwavecounter).getCounter(), circlestrokepaint);
-						shockwave.get(shockwavecounter).setCounter(shockwave.get(shockwavecounter).getCounter() - 1);
+						canvas.drawCircle(currentshockwave.getPosition().x, currentshockwave.getPosition().y,21 - currentshockwavelife, circlestrokepaint);
 						break;
 					case 2: // is big wave animation
-						circlestrokepaint.setColor(Color.argb(shockwave.get(shockwavecounter).getCounter() * 2, 255, 255, 255));
+						circlestrokepaint.setColor(Color.argb(currentshockwavelife * 2, 255, 255, 255));
 						circlestrokepaint.setStrokeWidth(1);
-						canvas.drawCircle(shockwave.get(shockwavecounter).getPosition().x, shockwave.get(shockwavecounter).getPosition().y,128 - shockwave.get(shockwavecounter).getCounter(), circlestrokepaint);
-						shockwave.get(shockwavecounter).setCounter(shockwave.get(shockwavecounter).getCounter() - 4);
+						canvas.drawCircle(currentshockwave.getPosition().x, currentshockwave.getPosition().y,128 - currentshockwavelife, circlestrokepaint);
 						break;
 					case 3: // is super big animation
-						circlestrokepaint.setColor(Color.argb(shockwave.get(shockwavecounter).getCounter(), 255, 255, 255));
+						circlestrokepaint.setColor(Color.argb(currentshockwavelife, 255, 255, 255));
 						circlestrokepaint.setStrokeWidth(1);
-						canvas.drawCircle(shockwave.get(shockwavecounter).getPosition().x, shockwave.get(shockwavecounter).getPosition().y,252 - shockwave.get(shockwavecounter).getCounter(), circlestrokepaint);
-						shockwave.get(shockwavecounter).setCounter(shockwave.get(shockwavecounter).getCounter() - 4);
-						break;
-					default:
+						canvas.drawCircle(currentshockwave.getPosition().x, currentshockwave.getPosition().y,252 - currentshockwavelife, circlestrokepaint);
 						break;
 					}
 				}
@@ -609,19 +607,18 @@ public class GameActivity extends Activity implements SensorEventListener
 				if (popup.get(popupcounter).getCounter() > 0) // if popup text is to be shown
 				{
 					popuptext.setColor(Color.argb(popup.get(popupcounter).getCounter(), 255, 255, 255)); // text fade effect
+                    Popup currentpopup = popup.get(popupcounter);
 
 					switch (popup.get(popupcounter).getType()) 
 					{
 					case 0: // scoreup
-						canvas.drawText(extralifestrings[popup.get(popupcounter).getTextIndex()], popup.get(popupcounter).getPosition().x, popup.get(popupcounter).getPosition().y - popup.get(popupcounter).getCounter(), popuptext);
+						canvas.drawText(extralifestrings[currentpopup.getTextIndex()], currentpopup.getPosition().x, currentpopup.getPosition().y - currentpopup.getCounter(), popuptext);
 						break;
 					case 1: // lose life
-						canvas.drawText(lostlifestrings[popup.get(popupcounter).getTextIndex()], popup.get(popupcounter).getPosition().x, popup.get(popupcounter).getPosition().y + popup.get(popupcounter).getCounter(), popuptext);
+						canvas.drawText(lostlifestrings[currentpopup.getTextIndex()], currentpopup.getPosition().x, currentpopup.getPosition().y + currentpopup.getCounter(), popuptext);
 						break;
 					case 2: // solo
-						canvas.drawText(extralifestrings[popup.get(popupcounter).getTextIndex()], popup.get(popupcounter).getPosition().x, popup.get(popupcounter).getPosition().y + popup.get(popupcounter).getCounter(), popuptext);
-						break;
-					default:
+						canvas.drawText(extralifestrings[currentpopup.getTextIndex()], currentpopup.getPosition().x, currentpopup.getPosition().y + currentpopup.getCounter(), popuptext);
 						break;
 					}
 				}
@@ -631,14 +628,15 @@ public class GameActivity extends Activity implements SensorEventListener
 
 			for (int buzzballcounter = buzzball.size() - 1; buzzballcounter >= 0; buzzballcounter--) // draw buzzball
 			{
+                BuzzBall currentbuzzball = buzzball.get(buzzballcounter);
 				buzzballpaint.setAlpha(buzzball.get(buzzballcounter).getOpacity());
 				
-				if (buzzball.get(buzzballcounter).isDead())
+				if (currentbuzzball.isDead())
 					buzzball.remove(buzzballcounter); // cleanup dead buzzballs from array list
-				else if(buzzball.get(buzzballcounter).getOpacity() < 0)
-					buzzball.get(buzzballcounter).kill();
+				else if(currentbuzzball.getOpacity() < 0)
+                    currentbuzzball.kill();
 				else
-					canvas.drawBitmap(buzzballbitmaps[buzzball.get(buzzballcounter).getType()].getFrame(buzzball.get(buzzballcounter).getRotation()).getBitmap(), buzzball.get(buzzballcounter).getPosition().x + buzzballbitmaps[buzzball.get(buzzballcounter).getType()].getFrame(buzzball.get(buzzballcounter).getRotation()).getOffset().x, buzzball.get(buzzballcounter).getPosition().y + buzzballbitmaps[buzzball.get(buzzballcounter).getType()].getFrame(buzzball.get(buzzballcounter).getRotation()).getOffset().y, buzzballpaint);
+					canvas.drawBitmap(buzzballbitmaps[currentbuzzball.getType()].getFrame(currentbuzzball.getRotation()).getBitmap(), currentbuzzball.getPosition().x + buzzballbitmaps[currentbuzzball.getType()].getFrame(currentbuzzball.getRotation()).getOffset().x, currentbuzzball.getPosition().y + buzzballbitmaps[currentbuzzball.getType()].getFrame(currentbuzzball.getRotation()).getOffset().y, buzzballpaint);
 			}
 			
 			if (life > 0)

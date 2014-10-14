@@ -34,15 +34,15 @@ final class AI implements Runnable
 			target.y = 0;
 			for (int ballcounter = ball.size() - 1; ballcounter >= 0; ballcounter--)
 			{
-				if ((ball.get(ballcounter).getPosition().x >= playerposition.x) && (ball.get(ballcounter).getPosition().x <= playerposition.x + gameactivity.getSmileyWidth()))
-					ball.get(ballcounter).setTargetable(false);
+                Ball currentball = ball.get(ballcounter);
+				if ((currentball.getPosition().x >= playerposition.x) && (currentball.getPosition().x <= playerposition.x + gameactivity.getSmileyWidth()))
+                    currentball.setTargetable(false);
 				else
-					ball.get(ballcounter).setTargetable(true); // if true ball a valid AI target
+                    currentball.setTargetable(true); // if true ball a valid AI target
 				
-				if ((!ball.get(ballcounter).isDead()) && (ball.get(ballcounter).isNotGoingUp()) && (ball.get(ballcounter).isTargetable()) && (ball.get(ballcounter).getPosition().y > target.y))
-					target.set(ball.get(ballcounter).getPosition().x - gameactivity.getSmileyWidth() / 2, ball.get(ballcounter).getPosition().y - gameactivity.getSmileyHeight() / 2); // check for priority target
+				if ((!currentball.isDead()) && (currentball.isNotGoingUp()) && (currentball.isTargetable()) && (currentball.getPosition().y > target.y))
+					target.set(currentball.getPosition().x - gameactivity.getSmileyWidth() / 2, currentball.getPosition().y - gameactivity.getSmileyHeight() / 2); // check for priority target
 			}
-
 			gameactivity.getPlayer()[1].setDestination(target.x); // set AI target
 
 			try

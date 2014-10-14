@@ -5,7 +5,7 @@ import android.graphics.Point;
 final class Shockwave 
 {
 	private Point position = new Point();
-	private int counter; // animation index counter
+	private int life; // animation index life
 	private int type; // shockwave type
 	
 	Shockwave(Point position, int type)
@@ -13,32 +13,37 @@ final class Shockwave
 		switch (type)
 		{
 		case 0: // extra small wave
-			setCounter(11);
+			this.life = 11;
 			break;
 		case 1: // small wave
-			setCounter(21);
+            this.life = 21;
 			break;
 		case 2: // medium wave
-			setCounter(128);
+            this.life = 128;
 			break;
 		case 3: // large wave
-			setCounter(252);
+            this.life = 252;
 			break;
 		}
 		this.setType(type);
 		this.getPosition().x = position.x;
 		this.getPosition().y = position.y;
 	}
-	
-	public int getCounter() 
-	{
-		return counter;
-	}
 
-	public void setCounter(int counter) 
-	{
-		this.counter = counter;
-	}
+    public int getLife()
+    {
+        switch (type)
+        {
+            case 0 :
+            case 1 :
+                return life -= 1;
+            case 2 :
+            case 3 :
+                return life -= 4;
+            default :
+                return life;
+        }
+    }
 
 	public int getType() 
 	{
@@ -53,10 +58,5 @@ final class Shockwave
 	public Point getPosition() 
 	{
 		return position;
-	}
-
-	public void setPosition(Point position) 
-	{
-		this.position = position;
 	}
 }

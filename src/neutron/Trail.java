@@ -18,24 +18,18 @@ final class Trail
 	
 	int calcSize()
 	{
-		switch (getCounter())
+		switch (counter)
 		{
 		case 9:
-			return 1;
 		case 8:
-			return 1;
 		case 7:
 			return 1;
 		case 6:
-			return 2;
 		case 5:
-			return 2;
 		case 4:
 			return 2;
 		case 3:
-			return 3;
 		case 2:
-			return 3;
 		case 1:
 			return 3;
 		default:
@@ -58,18 +52,8 @@ final class Trail
 		return startpoint;
 	}
 
-	public void setStartPoint(Point startpoint) 
-	{
-		this.startpoint = startpoint;
-	}
-
 	public Point getEndPoint() 
 	{
 		return endpoint;
-	}
-
-	public void setEndPoint(Point endpoint) 
-	{
-		this.endpoint = endpoint;
 	}
 }

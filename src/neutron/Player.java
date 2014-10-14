@@ -104,11 +104,6 @@ final class Player implements Runnable
 		}
 	}
 
-	public float getMomentum()
-	{
-		return (climb + gravity) / 2;
-	}
-
 	public void jump() // do jump
 	{
 		climb = (float) -(rnd.nextInt(2) + 6); // upward force
@@ -120,49 +115,14 @@ final class Player implements Runnable
 		return position;
 	}
 
-	public void setPosition(Point position)
-	{
-		this.position = position;
-	}
-
 	public boolean isRight()
 	{
 		return right;
 	}
 
-	public void setRight(boolean right)
-	{
-		this.right = right;
-	}
-
-	public int getSpeedX()
-	{
-		return speedX;
-	}
-
-	public void setSpeedX(int speedX)
-	{
-		this.speedX = speedX;
-	}
-
-	public int getSpeedY()
-	{
-		return speedY;
-	}
-
-	public void setSpeedY(int speedY)
-	{
-		this.speedY = speedY;
-	}
-
 	public Point getPposition()
 	{
 		return pposition;
-	}
-
-	public void setPposition(Point pposition) 
-	{
-		this.pposition = pposition;
 	}
 
 	public void setDestination(float roll)

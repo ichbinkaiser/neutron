@@ -42,10 +42,7 @@ final class Ball implements Runnable
 
 	private boolean checkCollision(Point object) // ball collision detection
 	{
-		if (((object.x <= getPosition().x + gameactivity.getBallSize() - 1) && (object.x >= getPosition().x - gameactivity.getBallSize() - 1) && ((object.y <= getPosition().y + gameactivity.getBallSize() - 1) && (object.y >= getPosition().y - gameactivity.getBallSize() - 1))))
-			return true;
-		else
-			return false;
+		return (((object.x <= getPosition().x + gameactivity.getBallSize() - 1) && (object.x >= getPosition().x - gameactivity.getBallSize() - 1) && ((object.y <= getPosition().y + gameactivity.getBallSize() - 1) && (object.y >= getPosition().y - gameactivity.getBallSize() - 1))));
 	}
 
 	public void start()
@@ -71,10 +68,7 @@ final class Ball implements Runnable
 					
 					gameactivity.getShockwave().add(new Shockwave(position, 0));
 
-					if (player[playercounter].isRight())
-						goingleft = true;
-					else
-						goingleft = false; // player.right toggle
+                    goingleft = (player[playercounter].isRight());
 
 					if (playercounter == 0)
 					{
@@ -90,23 +84,24 @@ final class Ball implements Runnable
 
 			for (int ballcounter = ball.size() - 1; ballcounter >= 0; ballcounter--) // ball to ball collision detection
 			{
-				if ((this != ball.get(ballcounter)) && (!collide)) // if ball is not compared to itself and has not yet collided
+                Ball currentball = ball.get(ballcounter);
+				if ((this != currentball) && (!collide)) // if ball is not compared to itself and has not yet collided
 				{
-					if (checkCollision(ball.get(ballcounter).getPosition())) // ball collision detected
+					if (checkCollision(currentball.getPosition())) // ball collision detected
 					{
 						GameActivity.getResourceManager().playSound(6, 1);
-						if ((goingleft) && (!ball.get(ballcounter).goingleft)) 
+						if ((goingleft) && (!currentball.goingleft))
 						{
 							goingleft = false;
-							ball.get(ballcounter).goingleft = true;
+                            currentball.goingleft = true;
 						}
 						else 
 						{
 							goingleft = true;
-							ball.get(ballcounter).goingleft = false;
+                            currentball.goingleft = false;
 						}
 						sidewardspeed = rnd.nextInt(5);
-						ball.get(ballcounter).collide = true;
+                        currentball.collide = true;
 					}
 				}
 			}
@@ -201,11 +196,6 @@ final class Ball implements Runnable
 	public void setGoingleft(boolean goingleft)
 	{
 		this.goingleft = goingleft;
-	}
-
-	public void setPosition(Point position) 
-	{
-		this.position = position;
 	}
 
 	public boolean isNotGoingUp()
