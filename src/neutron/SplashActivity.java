@@ -45,11 +45,11 @@ public class SplashActivity extends Activity
 			boolean loading = true;
 			while(loading)
 			{
-				if (GameActivity.getResourceManager().soundsloaded == 0)
+				if (GameActivity.getResourceManager().getSoundsloaded() == 0)
 					GameActivity.getResourceManager().loadSounds();
-				else if ((GameActivity.getResourceManager().soundsloaded == GameActivity.getResourceManager().getSoundLibrarySize()) && (GameActivity.getResourceManager().bitmapsloaded == 0))
+				else if ((GameActivity.getResourceManager().getSoundsloaded() == GameActivity.getResourceManager().getSoundLibrarySize()) && (GameActivity.getResourceManager().getBitmapsloaded() == 0))
 					GameActivity.getResourceManager().loadBitmaps();
-				else if ((GameActivity.getResourceManager().soundsloaded == GameActivity.getResourceManager().getSoundLibrarySize()) && (GameActivity.getResourceManager().bitmapsloaded == GameActivity.getResourceManager().getBitmapsSize()))
+				else if ((GameActivity.getResourceManager().getSoundsloaded() == GameActivity.getResourceManager().getSoundLibrarySize()) && (GameActivity.getResourceManager().getBitmapsloaded() == GameActivity.getResourceManager().getBitmapsSize()))
 				{
 					loading = false;
 					showMain();

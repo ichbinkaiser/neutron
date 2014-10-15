@@ -13,18 +13,17 @@ final class Player implements Runnable
 	private Point pposition = new Point(); // last position
 	private float climb; // upward force
 	private float gravity = 0.0f; // downward force
-	private int destination;
+	private short destination;
 	private boolean right = true; // is left direction
 	private boolean jumping = false; // is jumping
-	private int speedX, speedY; // side speed
-	private int ground; // basepoint for player
+	private short ground; // basepoint for player
 	private Random rnd = new Random();
 	private float shadowL, shadowT, shadowR, shadowB, shadowEdge; // shadow properties
-	private int shadowOpacity;
+	private short shadowOpacity;
 	private RectF shadow = new RectF();
-	private int jumpheight;
+	private short jumpheight;
 
-	Player(GameActivity gameActivity, int ground) 
+	Player(GameActivity gameActivity, short ground)
 	{
 		this.gameActivity = gameActivity;
 		this.ground = ground;
@@ -79,12 +78,12 @@ final class Player implements Runnable
 				gravity = 0.0f;
 			}
 
-			jumpheight = (ground - position.y) / 10;
+			jumpheight = (short)((ground - position.y) / 10);
 			
 			if (jumpheight < gameActivity.getSmileyWidth()/4)
 			{
 				shadowEdge = jumpheight;
-				shadowOpacity = 50 - jumpheight * 2;
+				shadowOpacity = (short)(50 - jumpheight * 2);
 			}
 			
 			shadowL = position.x + shadowEdge;
@@ -106,7 +105,7 @@ final class Player implements Runnable
 
 	public void jump() // do jump
 	{
-		climb = (float) -(rnd.nextInt(2) + 6); // upward force
+		climb = -(float)(rnd.nextInt(2) + 6); // upward force
 		jumping = true;
 	}
 
@@ -128,17 +127,17 @@ final class Player implements Runnable
 	public void setDestination(float roll)
 	{
 		if (roll<0)
-			destination = (int) (position.x + Math.abs(roll*5));
+			destination = (short)(position.x + Math.abs(roll*5));
 		else if (roll>0)
-			destination = (int) (position.x - Math.abs(roll*5));
+			destination = (short)(position.x - Math.abs(roll*5));
 	}
 
-	public void setDestination(int destination)
-	{
-		this.destination = destination;
-	}
+    public void setDestination(int target)
+    {
+        destination = (short)target;
+    }
 	
-	public int getGround()
+	public short getGround()
 	{
 		return ground;
 	}
@@ -148,7 +147,7 @@ final class Player implements Runnable
 		return shadow;
 	}
 	
-	public int getShadowOpacity()
+	public short getShadowOpacity()
 	{
 		return shadowOpacity;
 	}

@@ -32,16 +32,13 @@ final class AI implements Runnable
 		while(gameactivity.isRunning()) // AI Thread
 		{
 			target.y = 0;
-			for (int ballcounter = ball.size() - 1; ballcounter >= 0; ballcounter--)
+			for (short ballcounter = (short)(ball.size() - 1); ballcounter >= 0; ballcounter--)
 			{
                 Ball currentball = ball.get(ballcounter);
-				if ((currentball.getPosition().x >= playerposition.x) && (currentball.getPosition().x <= playerposition.x + gameactivity.getSmileyWidth()))
-                    currentball.setTargetable(false);
-				else
-                    currentball.setTargetable(true); // if true ball a valid AI target
+				currentball.setTargetable(!(currentball.getPosition().x >= playerposition.x) && (currentball.getPosition().x <= playerposition.x + gameactivity.getSmileyWidth())); // if not true ball is a valid AI target
 				
 				if ((!currentball.isDead()) && (currentball.isNotGoingUp()) && (currentball.isTargetable()) && (currentball.getPosition().y > target.y))
-					target.set(currentball.getPosition().x - gameactivity.getSmileyWidth() / 2, currentball.getPosition().y - gameactivity.getSmileyHeight() / 2); // check for priority target
+                    target.set(currentball.getPosition().x - gameactivity.getSmileyWidth() / 2, currentball.getPosition().y - gameactivity.getSmileyHeight() / 2); // check for priority target
 			}
 			gameactivity.getPlayer()[1].setDestination(target.x); // set AI target
 

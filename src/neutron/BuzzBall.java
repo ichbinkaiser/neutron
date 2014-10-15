@@ -9,22 +9,23 @@ import android.util.Log;
 final public class BuzzBall implements Runnable
 {
 	private GameActivity gameactivity;
-	private int rotation = 0;
-	private int type, height, width;
+	private short rotation = 0;
+    private byte type;
+	private short  height, width;
 	private boolean dead = false, dying = false;
 	private float gravity = 0.0f;
 	private float climb = 3; // upward force
-	private int xmovement = 0;
+	private short xmovement = 0;
 	private ArrayList<Ball> ball;
 	private ArrayList<Ball>	ballcollided = new ArrayList<Ball>(); // array list of balls that have collided with this buzzball
-	private int ground; //groung bounce for buzzball
+	private short ground; //groung bounce for buzzball
 	private Player[] player; // player pointer
 	private Point position = new Point(); Point pposition = new Point();
 	private Random rnd = new Random();
 	private float inertia = 0;
-	private int opacity = 255;
+	private short opacity = 255;
 
-	BuzzBall(GameActivity gameActivity, int type, int height, int width, ArrayList<Ball> ball, Player[] player)
+	BuzzBall(GameActivity gameActivity, byte type, short height, short width, ArrayList<Ball> ball, Player[] player)
 	{
 		this.gameactivity = gameActivity;
 		this.type = type;
@@ -46,13 +47,13 @@ final public class BuzzBall implements Runnable
 
 	public void run()
 	{
-		int roll;
+		short roll;
 
-		ground = player[1].getGround() - rnd.nextInt(player[1].getGround() - player[0].getGround()); //rnd.nextInt(player[1].getGround()); // set random ground for buzzball in a specific range
+		ground = (short)(player[1].getGround() - rnd.nextInt(player[1].getGround() - player[0].getGround())); // set random ground for buzzball in a specific range
 
 		while(gameactivity.isRunning() && (!dead))
 		{
-			roll = (int) gameactivity.getRollAngle();
+			roll = (short) gameactivity.getRollAngle();
 
 			if ((roll > 0) && (inertia < 10))
 				inertia += .05;
@@ -96,14 +97,14 @@ final public class BuzzBall implements Runnable
 			}
 
 
-			for (int ballcounter = ball.size() - 1; ballcounter >= 0; ballcounter--)
+			for (short ballcounter = (short)(ball.size() - 1); ballcounter >= 0; ballcounter--)
 			{
                 Ball currentball = ball.get(ballcounter);
 				if ((currentball.getPosition().x >= position.x) && (currentball.getPosition().x <= position.x + width) && (currentball.getPosition().y >= position.y) && (currentball.getPosition().y <= position.y + height))
 				{
 					boolean collided = false;
 
-					for (int ballcollidedcounter = ballcollided.size() - 1; ballcollidedcounter >= 0; ballcollidedcounter--)
+					for (short ballcollidedcounter = (short)(ballcollided.size() - 1); ballcollidedcounter >= 0; ballcollidedcounter--)
 					{
 						if (ballcollided.get(ballcollidedcounter) == ball.get(ballcounter)) collided = true;
 					}
@@ -144,7 +145,7 @@ final public class BuzzBall implements Runnable
 		}
 	}
 
-	public int getOpacity()
+	public short getOpacity()
 	{
 		return opacity;
 	}
@@ -154,17 +155,12 @@ final public class BuzzBall implements Runnable
 		return position;
 	}
 
-	public void setPosition(Point position) 
-	{
-		this.position = position;
-	}
-
-	public int getRotation()
+	public short getRotation()
 	{
 		return rotation;
 	}
 
-	public int getType()
+	public byte getType()
 	{
 		return type;
 	}
@@ -177,16 +173,6 @@ final public class BuzzBall implements Runnable
 	public void kill()
 	{
 		dead = true;
-	}
-
-	public void setXmovement(int xmovement)
-	{
-		this.xmovement = xmovement;
-	}
-
-	public boolean isGoingUp()
-	{
-		return (pposition.y > position.y);
 	}
 
 }

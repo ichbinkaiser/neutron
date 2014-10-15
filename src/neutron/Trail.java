@@ -6,7 +6,7 @@ final class Trail
 {
 	private Point startpoint = new Point(); //start point
 	private Point endpoint = new Point(); //end point
-	private int counter = 10; // animation index
+	private int life = 10; // animation index
 	
 	Trail(Point startpoint, Point endpoint)
 	{
@@ -18,7 +18,7 @@ final class Trail
 	
 	int calcSize()
 	{
-		switch (counter)
+		switch (life)
 		{
 		case 9:
 		case 8:
@@ -37,14 +37,14 @@ final class Trail
 		}
 	}
 	
-	public int getCounter() 
+	public int getLife()
 	{
-		return counter;
+		return life;
 	}
 
-	public void setCounter(int counter) 
+	public void setLife(int life)
 	{
-		this.counter = counter;
+		this.life = life;
 	}
 
 	public Point getStartPoint() 

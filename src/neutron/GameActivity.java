@@ -36,21 +36,20 @@ import android.hardware.SensorManager;
 
 public class GameActivity extends Activity implements SensorEventListener
 {
-	private int canvasheight;
-	private int canvaswidth;
-	private int midpoint; // canvas horizontal midpoint
-	private int life = 50;
-	private int gamescore = 0;
-	private int ballcount = 5;
+	private short canvasheight, canvaswidth;
+	private short midpoint; // canvas horizontal midpoint
+	private short life = 50;
+	private short gamescore = 0;
+	private short ballcount = 5;
 	private boolean running = true; // game running
 	private boolean gameover = false;
 	private static String score;
-	private int ballsize;
+	private byte ballsize;
 	private boolean reverseposition = false; // AI reverse position in doubles mode
 	private boolean sologame = true;
-	private int players;
+	private byte players;
 	private static ResourceManager resourcemanager = new ResourceManager(); // global sound manager
-	private int smileywidth, smileyheight; // smiley object dimensions
+	private short smileywidth, smileyheight; // smiley object dimensions
 	private ArrayList<Popup> popup = new ArrayList<Popup>(); // popup messages array list
 	private ArrayList<Shockwave> shockwave = new ArrayList<Shockwave>(); // shockwave animation list
 	private ArrayList<Trail> trail = new ArrayList<Trail>(); // trail animation list
@@ -83,7 +82,7 @@ public class GameActivity extends Activity implements SensorEventListener
 		this.wakelock.acquire();
 
 		if (getIntent().getIntExtra("BALLS_COUNT", -1) > 0)
-			ballcount = getIntent().getIntExtra("BALLS_COUNT", -1); // retrieve ball count from main activity
+			ballcount = (short)getIntent().getIntExtra("BALLS_COUNT", -1); // retrieve ball count from main activity
 		
 		sologame = getIntent().getBooleanExtra("SOLO_GAME", false);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
@@ -139,64 +138,24 @@ public class GameActivity extends Activity implements SensorEventListener
 		v.vibrate(time);
 	}
 
-	public boolean isReversePosition() 
-	{
-		return reverseposition;
-	}
-
-	public void setReversePosition(boolean reverseposition) 
-	{
-		this.reverseposition = reverseposition;
-	}
-
-	public int getMidpoint() 
-	{
-		return midpoint;
-	}
-
-	public void setMidpoint(int midpoint) 
-	{
-		this.midpoint = midpoint;
-	}
-
 	public boolean isRunning() 
 	{
 		return running;
 	}
 
-	public void setRunning(boolean running)
-	{
-		this.running = running;
-	}
-
-	public int getCanvasWidth() 
+	public short getCanvasWidth()
 	{
 		return canvaswidth;
 	}
 
-	public void setCanvasWidth(int canvaswidth) 
-	{
-		this.canvaswidth = canvaswidth;
-	}
-
-	public int getCanvasHeight() 
+	public short getCanvasHeight()
 	{
 		return canvasheight;
 	}
 
-	public void setCanvasHeight(int canvasheight) 
-	{
-		this.canvasheight = canvasheight;
-	}
-
-	public int getBallSize() 
+	public byte getBallSize()
 	{
 		return ballsize;
-	}
-
-	public void setBallSize(int ballsize) 
-	{
-		this.ballsize = ballsize;
 	}
 
 	public ArrayList<Shockwave> getShockwave() 
@@ -204,49 +163,24 @@ public class GameActivity extends Activity implements SensorEventListener
 		return shockwave;
 	}
 
-	public void setShockwave(ArrayList<Shockwave> shockwave) 
-	{
-		this.shockwave = shockwave;
-	}
-
-	public int getSmileyHeight() 
+	public short getSmileyHeight()
 	{
 		return smileyheight;
 	}
 
-	public void setSmileyHeight(int smileyheight) 
-	{
-		this.smileyheight = smileyheight;
-	}
-
-	public int getGameScore() 
+	public short getGameScore()
 	{
 		return gamescore;
 	}
 
-	public void setGameScore(int score) 
+	public void setGameScore(short score)
 	{
 		this.gamescore = score;
 	}
 
-	public int getSmileyWidth() 
+	public short getSmileyWidth()
 	{
 		return smileywidth;
-	}
-
-	public void setSmileyWidth(int smileywidth) 
-	{
-		this.smileywidth = smileywidth;
-	}
-
-	public int getBallCount() 
-	{
-		return ballcount;
-	}
-
-	public void setBallCount(int ballcount) 
-	{
-		this.ballcount = ballcount;
 	}
 
 	public static ResourceManager getResourceManager() 
@@ -254,32 +188,17 @@ public class GameActivity extends Activity implements SensorEventListener
 		return resourcemanager;
 	}
 
-	public boolean isSoloGame() 
-	{
-		return sologame;
-	}
-
-	public void setSoloGame(boolean sologame) 
-	{
-		this.sologame = sologame;
-	}
-
 	public ArrayList<Popup> getPopup() 
 	{
 		return popup;
 	}
 
-	public void setPopup(ArrayList<Popup> popup) 
-	{
-		this.popup = popup;
-	}
-
-	public int getLife() 
+	public short getLife()
 	{
 		return life;
 	}
 
-	public void setLife(int life) 
+	public void setLife(short life)
 	{
 		this.life = life;
 	}
@@ -289,29 +208,14 @@ public class GameActivity extends Activity implements SensorEventListener
 		return trail;
 	}
 
-	public void setTrail(ArrayList<Trail> trail) 
-	{
-		this.trail = trail;
-	}
-
 	public static String getScore() 
 	{
 		return score;
 	}
 
-	public ArrayList<BuzzBall> getBuzzBall()
-	{
-		return buzzball;
-	}
-
 	public float getRollAngle() 
 	{
 		return rollangle;
-	}
-
-	public ArrayList<Ball> getBall()
-	{
-		return ball;
 	}
 
 	public Player[] getPlayer()
@@ -351,7 +255,7 @@ public class GameActivity extends Activity implements SensorEventListener
 					running =  false;
 					gameover = true;
 					gamesurfacethread.setFlag(false);
-					resourcemanager.playSound(7, 1);
+					resourcemanager.playSound(ResourceManager.SPAWN, 1);
 					showScore();
 				}
 				
@@ -400,9 +304,9 @@ public class GameActivity extends Activity implements SensorEventListener
 			DisplayMetrics metrics = new DisplayMetrics();
 			getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-			canvaswidth = metrics.widthPixels;
-			canvasheight = metrics.heightPixels;
-			midpoint = canvaswidth / 2;
+			canvaswidth = (short)metrics.widthPixels;
+			canvasheight = (short)metrics.heightPixels;
+			midpoint = (short)(canvaswidth / 2);
 
 			player = new Player[players]; // set Players array
 
@@ -412,8 +316,8 @@ public class GameActivity extends Activity implements SensorEventListener
 			smileyright = BitmapFactory.decodeResource(getResources(), R.drawable.smiley); // create pong image for player
 			Log.i(getLocalClassName(), "Smiley right created");
 
-			smileyheight = smileyright.getHeight(); // store smiley dimensions
-			smileywidth = smileyright.getWidth();
+			smileyheight = (short)smileyright.getHeight(); // store smiley dimensions
+			smileywidth = (short)smileyright.getWidth();
 
 			Matrix matrix = new Matrix();
 			matrix.preScale(-1.0f, 1.0f);
@@ -461,18 +365,18 @@ public class GameActivity extends Activity implements SensorEventListener
 
 			if (sologame)
 			{
-				player[0] = new Player(GameActivity.this, canvasheight - canvasheight / 4);
+				player[0] = new Player(GameActivity.this, (short)(canvasheight - canvasheight / 4));
 				player[0].getPosition().set(midpoint, canvasheight - canvasheight / 4);
 				Log.i(getLocalClassName(), "Player0 initialized");
 			}
 			else
 			{
-				int[] ground = new int[2]; // player ground level array
+				short[] ground = new short[2]; // player ground level array
 				
-				ground[0] = canvasheight - canvasheight / 3;
-				ground[1] = canvasheight - canvasheight / 4;
+				ground[0] = (short)(canvasheight - canvasheight / 3);
+				ground[1] = (short)(canvasheight - canvasheight / 4);
 				
-				for (int playercounter = 0; playercounter < player.length; playercounter++) // initialize player and AI
+				for (byte playercounter = 0; playercounter < player.length; playercounter++) // initialize player and AI
 				{
 					player[playercounter] = new Player(GameActivity.this, ground[playercounter]);
 					Log.i(getLocalClassName(), "Player" + Integer.toString(playercounter) + " initialized");
@@ -529,7 +433,7 @@ public class GameActivity extends Activity implements SensorEventListener
 		{
 			canvas.drawBitmap(back, 0, 0, null);
 
-			for (int playercounter = 0; playercounter < player.length; playercounter++) // draw player
+			for (byte playercounter = 0; playercounter < player.length; playercounter++) // draw player
 			{
 				shadowpaint.setAlpha(player[playercounter].getShadowOpacity());
 				canvas.drawOval(player[playercounter].getShadow(), shadowpaint);
@@ -545,7 +449,7 @@ public class GameActivity extends Activity implements SensorEventListener
 						canvas.drawBitmap(smileyshadesleft, player[playercounter].getPosition().x, player[playercounter].getPosition().y, null); // draw AI smiley
 			}
 
-			for (int ballcounter = ball.size() - 1; ballcounter >= 0; ballcounter--) // ball drawer
+			for (short ballcounter = (short)(ball.size() - 1); ballcounter >= 0; ballcounter--) // ball drawer
 			{
                 Ball currentball = ball.get(ballcounter);
 				if (currentball.isDead())
@@ -554,26 +458,26 @@ public class GameActivity extends Activity implements SensorEventListener
 					canvas.drawCircle(currentball.getPosition().x, currentball.getPosition().y, ballsize, pint);
 			}
 
-			for (int trailcounter = trail.size() - 1; trailcounter >= 0; trailcounter--) // trail drawer
+			for (short trailcounter = (short)(trail.size() - 1); trailcounter >= 0; trailcounter--) // trail drawer
 			{
                 Trail currenttrail = trail.get(trailcounter);
-				if (currenttrail.getCounter() > 0)
+				if (currenttrail.getLife() > 0)
 				{
 					balltrail.setStrokeWidth(ballsize - currenttrail.calcSize());
-					balltrail.setColor(Color.argb(currenttrail.getCounter() * 25, 255, 255, 255));
+					balltrail.setColor(Color.argb(currenttrail.getLife() * 25, 255, 255, 255));
 					canvas.drawLine(currenttrail.getStartPoint().x, currenttrail.getStartPoint().y, currenttrail.getEndPoint().x, currenttrail.getEndPoint().y, balltrail);
-                    currenttrail.setCounter(currenttrail.getCounter() - 1);
+                    currenttrail.setLife(currenttrail.getLife() - 1);
 				}
 				else
 					trail.remove(trailcounter); // remove dead trail
 			}
 
-			for (int shockwavecounter = shockwave.size() - 1; shockwavecounter >= 0; shockwavecounter--)  // shockwave drawer
+			for (short shockwavecounter = (short)(shockwave.size() - 1); shockwavecounter >= 0; shockwavecounter--)  // shockwave drawer
 			{
                 Shockwave currentshockwave = shockwave.get(shockwavecounter);
 				if (currentshockwave.getLife() > 0) // bump animation
 				{
-                    int currentshockwavelife = currentshockwave.getLife();
+                    short currentshockwavelife = currentshockwave.getLife();
 					switch (currentshockwave.getType())
 					{
 					case 0: // is small wave animation
@@ -602,7 +506,7 @@ public class GameActivity extends Activity implements SensorEventListener
 					shockwave.remove(shockwavecounter); // remove dead shockwave
 			}
 
-			for (int popupcounter = popup.size() - 1; popupcounter >= 0; popupcounter--) // popup text drawer
+			for (short popupcounter = (short)(popup.size() - 1); popupcounter >= 0; popupcounter--) // popup text drawer
 			{
 				if (popup.get(popupcounter).getCounter() > 0) // if popup text is to be shown
 				{
@@ -626,7 +530,7 @@ public class GameActivity extends Activity implements SensorEventListener
 					popup.remove(popupcounter); // remove dead popup
 			}
 
-			for (int buzzballcounter = buzzball.size() - 1; buzzballcounter >= 0; buzzballcounter--) // draw buzzball
+			for (short buzzballcounter = (short)(buzzball.size() - 1); buzzballcounter >= 0; buzzballcounter--) // draw buzzball
 			{
                 BuzzBall currentbuzzball = buzzball.get(buzzballcounter);
 				buzzballpaint.setAlpha(buzzball.get(buzzballcounter).getOpacity());
@@ -646,8 +550,8 @@ public class GameActivity extends Activity implements SensorEventListener
 	
 	private void addBuzzBall()
 	{
-		int type = rnd.nextInt(buzzballbitmaps.length - 1);
-		buzzball.add(new BuzzBall(GameActivity.this, type, buzzballbitmaps[type].getHeight(), buzzballbitmaps[type].getWidth(), ball, player));
+		byte type = (byte)rnd.nextInt(buzzballbitmaps.length - 1);
+		buzzball.add(new BuzzBall(GameActivity.this, type, (short)(buzzballbitmaps[type].getHeight()), (short)(buzzballbitmaps[type].getWidth()), ball, player));
 	}
 
 	public void onAccuracyChanged(Sensor sensor, int integer)

@@ -4,11 +4,12 @@ import android.graphics.Point;
 
 final class Shockwave 
 {
+    final static byte EXTRA_SMALL_WAVE = 0, SMALL_WAVE = 1, MEDIUM_WAVE = 2, LARGE_WAVE = 3;
 	private Point position = new Point();
-	private int life; // animation index life
-	private int type; // shockwave type
+	private short life; // animation index life
+	private byte type; // shockwave type
 	
-	Shockwave(Point position, int type)
+	Shockwave(Point position, byte type)
 	{
 		switch (type)
 		{
@@ -30,17 +31,17 @@ final class Shockwave
 		this.getPosition().y = position.y;
 	}
 
-    public int getLife()
+    public short getLife()
     {
         switch (type)
         {
-            case 0 :
-            case 1 :
+            case 0:
+            case 1:
                 return life -= 1;
-            case 2 :
-            case 3 :
+            case 2:
+            case 3:
                 return life -= 4;
-            default :
+            default:
                 return life;
         }
     }
@@ -50,7 +51,7 @@ final class Shockwave
 		return type;
 	}
 
-	public void setType(int type) 
+	public void setType(byte type)
 	{
 		this.type = type;
 	}
