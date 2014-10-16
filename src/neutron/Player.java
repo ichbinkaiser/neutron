@@ -8,25 +8,29 @@ import android.util.Log;
 
 final class Player implements Runnable
 {
-	private GameActivity gameActivity;
-	private Point position = new Point();
-	private Point pposition = new Point(); // last position
-	private float climb; // upward force
-	private float gravity = 0.0f; // downward force
-	private short destination;
-	private boolean right = true; // is left direction
-	private boolean jumping = false; // is jumping
-	private short ground; // basepoint for player
-	private Random rnd = new Random();
-	private float shadowL, shadowT, shadowR, shadowB, shadowEdge; // shadow properties
-	private short shadowOpacity;
-	private RectF shadow = new RectF();
-	private short jumpheight;
+	GameActivity gameActivity;
+	Point position = new Point();
+	Point pposition = new Point(); // last position
 
-	Player(GameActivity gameActivity, short ground)
+	float climb; // upward force
+	float gravity = 0.0f; // downward force
+	int destination;
+
+	boolean right = true; // is left direction
+	boolean jumping = false; // is jumping
+    int ground; // basepoint for player
+
+	Random rnd = new Random();
+	float shadowL, shadowT, shadowR, shadowB, shadowEdge; // shadow properties
+    int shadowOpacity;
+	RectF shadow = new RectF();
+    int jumpheight;
+
+	Player(GameActivity gameActivity, int ground, int x, int y)
 	{
 		this.gameActivity = gameActivity;
 		this.ground = ground;
+        position.set(x,y);
 		start();
 	}
 
@@ -39,10 +43,10 @@ final class Player implements Runnable
 
 	public void run() 
 	{
-		int edge = gameActivity.getCanvasWidth() - gameActivity.getSmileyWidth();
-		shadowT = ground + (gameActivity.getSmileyHeight() - gameActivity.getSmileyHeight() / 4);
-		shadowB = ground + gameActivity.getSmileyHeight();
-		while (gameActivity.isRunning())
+		int edge = gameActivity.canvaswidth - gameActivity.smileywidth;
+		shadowT = ground + (gameActivity.smileyheight - gameActivity.smileyheight / 4);
+		shadowB = ground + gameActivity.smileyheight;
+		while (gameActivity.running)
 		{
 			if ((position.x < destination) && (position.x < edge)) // player move right
 				if (Math.abs(destination - position.x) > 10)
@@ -78,23 +82,24 @@ final class Player implements Runnable
 				gravity = 0.0f;
 			}
 
-			jumpheight = (short)((ground - position.y) / 10);
+			jumpheight = (ground - position.y) / 10;
 			
-			if (jumpheight < gameActivity.getSmileyWidth()/4)
+			if (jumpheight < gameActivity.smileywidth / 4)
 			{
 				shadowEdge = jumpheight;
-				shadowOpacity = (short)(50 - jumpheight * 2);
+				shadowOpacity = 50 - jumpheight * 2;
 			}
 			
 			shadowL = position.x + shadowEdge;
-			shadowR = position.x + gameActivity.getSmileyWidth() - shadowEdge;
+			shadowR = position.x + gameActivity.smileywidth - shadowEdge;
 
 			shadow.set(shadowL, shadowT, shadowR, shadowB);
 
 			try
 			{
 				Thread.sleep(10);
-			} 
+			}
+
 			catch (InterruptedException e)
 			{
 				e.printStackTrace();
@@ -109,46 +114,16 @@ final class Player implements Runnable
 		jumping = true;
 	}
 
-	public Point getPosition()
-	{
-		return position;
-	}
-
-	public boolean isRight()
-	{
-		return right;
-	}
-
-	public Point getPposition()
-	{
-		return pposition;
-	}
-
 	public void setDestination(float roll)
 	{
 		if (roll<0)
-			destination = (short)(position.x + Math.abs(roll*5));
+			destination = (int)(position.x + Math.abs(roll*5));
 		else if (roll>0)
-			destination = (short)(position.x - Math.abs(roll*5));
+			destination = (int)(position.x - Math.abs(roll*5));
 	}
 
     public void setDestination(int target)
     {
-        destination = (short)target;
+        destination = target;
     }
-	
-	public short getGround()
-	{
-		return ground;
-	}
-
-	public RectF getShadow()
-	{
-		return shadow;
-	}
-	
-	public short getShadowOpacity()
-	{
-		return shadowOpacity;
-	}
 }

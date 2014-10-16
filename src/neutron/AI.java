@@ -6,16 +6,18 @@ import android.util.Log;
 
 final class AI implements Runnable
 {
-	private GameActivity gameactivity;
-	private ArrayList<Ball> ball = new ArrayList<Ball>();
-	private Point playerposition = new Point(); // Player location
-	private Point target = new Point(); // top ball threat
+	GameActivity gameactivity;
+	ArrayList<Ball> ball = new ArrayList<Ball>();
+
+	Point playerposition = new Point(); // Player location
+	Point target = new Point(); // top ball threat
 
 	AI(GameActivity gameActivity, ArrayList<Ball> ball, Player player)
 	{
 		this.gameactivity = gameActivity;
 		this.ball = ball;
-		playerposition = player.getPosition();
+		playerposition = player.position;
+        start();
 	}
 
 	public void start()
@@ -27,25 +29,26 @@ final class AI implements Runnable
 
 	public void run()
 	{
-		target.x = gameactivity.getCanvasWidth() / 2;
+		target.x = gameactivity.canvaswidth / 2;
 
-		while(gameactivity.isRunning()) // AI Thread
+		while (gameactivity.running) // AI Thread
 		{
 			target.y = 0;
-			for (short ballcounter = (short)(ball.size() - 1); ballcounter >= 0; ballcounter--)
+			for (int ballcounter = 0; ballcounter < ball.size(); ballcounter++)
 			{
                 Ball currentball = ball.get(ballcounter);
-				currentball.setTargetable(!(currentball.getPosition().x >= playerposition.x) && (currentball.getPosition().x <= playerposition.x + gameactivity.getSmileyWidth())); // if not true ball is a valid AI target
+				currentball.targetable = (!(currentball.position.x >= playerposition.x) && (currentball.position.x <= playerposition.x + gameactivity.smileywidth)); // if not true ball is a valid AI target
 				
-				if ((!currentball.isDead()) && (currentball.isNotGoingUp()) && (currentball.isTargetable()) && (currentball.getPosition().y > target.y))
-                    target.set(currentball.getPosition().x - gameactivity.getSmileyWidth() / 2, currentball.getPosition().y - gameactivity.getSmileyHeight() / 2); // check for priority target
+				if ((!currentball.dead) && (currentball.isNotGoingUp()) && (currentball.targetable) && (currentball.position.y > target.y))
+                    target.set(currentball.position.x - gameactivity.smileywidth / 2, currentball.position.y - gameactivity.smileyheight / 2); // check for priority target
 			}
-			gameactivity.getPlayer()[1].setDestination(target.x); // set AI target
+			gameactivity.player[1].setDestination(target.x); // set AI target
 
 			try
 			{
 				Thread.sleep(10);
-			} 
+			}
+
 			catch (InterruptedException e)
 			{
 				e.printStackTrace();

@@ -4,9 +4,9 @@ import android.graphics.Point;
 
 final class Trail 
 {
-	private Point startpoint = new Point(); //start point
-	private Point endpoint = new Point(); //end point
-	private int life = 10; // animation index
+	Point startpoint = new Point(); //start point
+	Point endpoint = new Point(); //end point
+	int life = 10; // animation index
 	
 	Trail(Point startpoint, Point endpoint)
 	{
@@ -35,25 +35,5 @@ final class Trail
 		default:
 			return 0;
 		}
-	}
-	
-	public int getLife()
-	{
-		return life;
-	}
-
-	public void setLife(int life)
-	{
-		this.life = life;
-	}
-
-	public Point getStartPoint() 
-	{
-		return startpoint;
-	}
-
-	public Point getEndPoint() 
-	{
-		return endpoint;
 	}
 }

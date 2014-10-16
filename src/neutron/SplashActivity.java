@@ -1,16 +1,16 @@
 package neutron;
 
+import android.util.Log;
 import core.neutron.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
-import android.view.Menu;
 import android.view.Window;
 import android.view.WindowManager;
 
 public class SplashActivity extends Activity 
 {
-	private LoadCheck loadcheck = new LoadCheck();
+	private Loader loader = new Loader();
     @Override
     public void onCreate(Bundle savedinstancestate) 
     {
@@ -19,9 +19,9 @@ public class SplashActivity extends Activity
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_splash);
-        GameActivity.getResourceManager().initSounds(this);
+        GameActivity.resourcemanager.initSounds(this);
         
-        loadcheck.start();
+        loader.start();
     }
     
     public void showMain()
@@ -31,39 +31,44 @@ public class SplashActivity extends Activity
 		finish();
 	}
     
-    private class LoadCheck implements Runnable
+    private class Loader implements Runnable
     {
     	public void start()
     	{
     		Thread thread = new Thread(this);
-    		thread.setName("LoadCheck");
+    		thread.setName("Loader");
     		thread.start();
     	}
 
 		public void run() 
 		{
-			boolean loading = true;
-			while(loading)
-			{
-				if (GameActivity.getResourceManager().getSoundsloaded() == 0)
-					GameActivity.getResourceManager().loadSounds();
-				else if ((GameActivity.getResourceManager().getSoundsloaded() == GameActivity.getResourceManager().getSoundLibrarySize()) && (GameActivity.getResourceManager().getBitmapsloaded() == 0))
-					GameActivity.getResourceManager().loadBitmaps();
-				else if ((GameActivity.getResourceManager().getSoundsloaded() == GameActivity.getResourceManager().getSoundLibrarySize()) && (GameActivity.getResourceManager().getBitmapsloaded() == GameActivity.getResourceManager().getBitmapsSize()))
-				{
-					loading = false;
-					showMain();
-				}
-				
-				try 
-				{
-					Thread.sleep(1000);
-				} 
-				catch (InterruptedException e) 
-				{
-					e.printStackTrace();
-				}
-			}
+            GameActivity.resourcemanager.loadSounds();
+			while (!(GameActivity.resourcemanager.soundsloaded == GameActivity.resourcemanager.soundlibrary.length))
+            {
+                pause(1000);
+            }
+
+            GameActivity.resourcemanager.loadBitmaps();
+            while (!(GameActivity.resourcemanager.bitmapsloaded == GameActivity.resourcemanager.getBitmapsSize()))
+            {
+                pause(1500);
+            }
+
+            showMain(); // done loading show go to main
 		}
     }
+
+    void pause(int duration)
+    {
+        try
+        {
+            Thread.sleep(duration);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+            Log.e("Splash", e.toString());
+        }
+    }
+
 }

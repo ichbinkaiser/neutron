@@ -13,35 +13,22 @@ import android.util.SparseIntArray;
 
 final class ResourceManager
 {
-    final static byte POP = 0, LIFE_UP = 1, DING = 2, POPWALL = 3, DOWN = 4, HIT = 5, RESTART = 6, SPAWN = 7;
-	public SoundPool soundpool;
-	private SparseIntArray sounds;
-	private AudioManager  audiomanager;
-	private Context context;
-	private byte soundsloaded = 0;
-    private short bitmapsloaded = 0;
-    private int[] drawablelibrary = new int[] {R.drawable.buzzball1, R.drawable.buzzball2, R.drawable.buzzball3, R.drawable.buzzball4, R.drawable.buzzball5, R.drawable.buzzball6};
-	private int[] soundlibrary = new int[] {R.raw.pop, R.raw.lifeup, R.raw.ding, R.raw.popwall, R.raw.down, R.raw.hit, R.raw.restart, R.raw.spawn};
-    private RollingObjectBitmap[] buzzballbitmaps = new RollingObjectBitmap[drawablelibrary.length]; //buzz ball bitmap
+    final static int POP = 0, LIFE_UP = 1, DING = 2, POPWALL = 3, DOWN = 4, HIT = 5, RESTART = 6, SPAWN = 7;
+	SoundPool soundpool;
+	SparseIntArray sounds;
+	AudioManager  audiomanager;
+	Context context;
+	int soundsloaded = 0;
+    int bitmapsloaded = 0;
 
-	public byte getSoundLibrarySize()
+    int[] drawablelibrary = new int[] {R.drawable.buzzball1, R.drawable.buzzball2, R.drawable.buzzball3, R.drawable.buzzball4, R.drawable.buzzball5, R.drawable.buzzball6};
+	int[] soundlibrary = new int[] {R.raw.pop, R.raw.lifeup, R.raw.ding, R.raw.popwall, R.raw.down, R.raw.hit, R.raw.restart, R.raw.spawn};
+
+    RollingObjectBitmap[] buzzballbitmaps = new RollingObjectBitmap[drawablelibrary.length]; //buzz ball bitmap
+
+	public int getBitmapsSize()
 	{
-		return (byte)soundlibrary.length;
-	}
-
-    public byte getSoundsloaded()
-    {
-        return soundsloaded;
-    }
-
-    public short getBitmapsloaded()
-    {
-        return bitmapsloaded;
-    }
-
-	public short getBitmapsSize()
-	{
-		return (short)(buzzballbitmaps.length * 360);
+		return buzzballbitmaps.length * 360;
 	}
 
 	public void initSounds(Context context)
@@ -62,7 +49,7 @@ final class ResourceManager
 			}
 		});
 
-		for (byte soundindex = 0; soundindex < soundlibrary.length; soundindex++)
+		for (int soundindex = 0; soundindex < soundlibrary.length; soundindex++)
 		{
 			sounds.put(soundindex + 1, soundpool.load(context, soundlibrary[soundindex], 1));
 		}
@@ -71,29 +58,29 @@ final class ResourceManager
 	public void loadBitmaps()
 	{
 		Matrix buzzball_matrix = new Matrix();
-		for (short bitmapindex = 0; bitmapindex < buzzballbitmaps.length; bitmapindex++)
+		for (int bitmapindex = 0; bitmapindex < buzzballbitmaps.length; bitmapindex++)
 		{
-			short centerX, centerY, source_width, source_height;
+			int centerX, centerY, source_width, source_height;
 			Bitmap source;
 
-			centerX = (short)(BitmapFactory.decodeResource(context.getResources(), drawablelibrary[bitmapindex]).getWidth() / 2);
-			centerY = (short)(BitmapFactory.decodeResource(context.getResources(), drawablelibrary[bitmapindex]).getHeight() / 2);
+			centerX = BitmapFactory.decodeResource(context.getResources(), drawablelibrary[bitmapindex]).getWidth() / 2;
+			centerY = BitmapFactory.decodeResource(context.getResources(), drawablelibrary[bitmapindex]).getHeight() / 2;
 
 			source = BitmapFactory.decodeResource(context.getResources(), drawablelibrary[bitmapindex]);
-			source_width = (short)(BitmapFactory.decodeResource(context.getResources(), drawablelibrary[bitmapindex]).getWidth());
-			source_height = (short)(BitmapFactory.decodeResource(context.getResources(), drawablelibrary[bitmapindex]).getHeight());
+			source_width = BitmapFactory.decodeResource(context.getResources(), drawablelibrary[bitmapindex]).getWidth();
+			source_height = BitmapFactory.decodeResource(context.getResources(), drawablelibrary[bitmapindex]).getHeight();
 
 			Log.i("ResourceManager", "Source buzzball " + bitmapindex + " created.");
 			buzzballbitmaps[bitmapindex] = new RollingObjectBitmap(centerX , centerY, source_width, source_height);
 
-			for (short frame = 0; frame < 360; frame++)
+			for (int frame = 0; frame < 360; frame++)
 			{
 				buzzball_matrix.setRotate(frame, centerX, centerY);
 				
 				if (frame % 2 == 0)
 					buzzballbitmaps[bitmapindex].setFrame(Bitmap.createBitmap(source, 0, 0, source_width, source_height, buzzball_matrix, true), frame);
 				else
-					buzzballbitmaps[bitmapindex].setFrame(buzzballbitmaps[bitmapindex].getFrame((short)(frame -1)), frame);
+					buzzballbitmaps[bitmapindex].setFrame(buzzballbitmaps[bitmapindex].getFrame(frame -1), frame);
 				
 				bitmapsloaded++;
 			}
@@ -101,23 +88,18 @@ final class ResourceManager
 		}
 	}
 
-	public void playSound(byte index, float speed)
+	public void playSound(int index, float speed)
 	{
 		if (soundsloaded==8)
 		{
 			float streamVolume = audiomanager.getStreamVolume(AudioManager.STREAM_MUSIC);
 			streamVolume = streamVolume / audiomanager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-			soundpool.play(sounds.get((int)index), streamVolume, streamVolume, 1, 0, speed);
+			soundpool.play(sounds.get(index), streamVolume, streamVolume, 1, 0, speed);
 		}
 	}
 
 	public void doCleanup()
 	{
 		soundpool.release();
-	}
-
-	public RollingObjectBitmap[] getBuzzballbitmaps()
-	{
-		return buzzballbitmaps;
 	}
 }

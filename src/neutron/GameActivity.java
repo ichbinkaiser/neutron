@@ -36,42 +36,49 @@ import android.hardware.SensorManager;
 
 public class GameActivity extends Activity implements SensorEventListener
 {
-	private short canvasheight, canvaswidth;
-	private short midpoint; // canvas horizontal midpoint
-	private short life = 50;
-	private short gamescore = 0;
-	private short ballcount = 5;
-	private boolean running = true; // game running
-	private boolean gameover = false;
-	private static String score;
-	private byte ballsize;
-	private boolean reverseposition = false; // AI reverse position in doubles mode
-	private boolean sologame = true;
-	private byte players;
-	private static ResourceManager resourcemanager = new ResourceManager(); // global sound manager
-	private short smileywidth, smileyheight; // smiley object dimensions
-	private ArrayList<Popup> popup = new ArrayList<Popup>(); // popup messages array list
-	private ArrayList<Shockwave> shockwave = new ArrayList<Shockwave>(); // shockwave animation list
-	private ArrayList<Trail> trail = new ArrayList<Trail>(); // trail animation list
-	private ArrayList<BuzzBall> buzzball = new ArrayList<BuzzBall>(); // buzzball fruit array list
-	private ArrayList<Ball> ball = new ArrayList<Ball>(); // whiteball array list
-	private RollingObjectBitmap[] buzzballbitmaps = resourcemanager.getBuzzballbitmaps(); //buzz ball bitmap
-	protected PowerManager.WakeLock wakelock;
-	private GameSurfaceThread gamesurfacethread;
-	private SurfaceHolder surfaceholder;
-	private SensorManager sensormanager;
-	private Sensor orientation;
-	private float rollangle = 0;
-	private Random rnd = new Random();
+	int canvasheight, canvaswidth;
+    int midpoint; // canvas horizontal midpoint
+    int life = 50;
+    int gamescore = 0;
+    int ballcount = 5;
+	boolean running = true; // game running
+	boolean gameover = false;
+	static String score;
+	int ballsize;
+	boolean reverseposition = false; // AI reverse position in doubles mode
+	boolean sologame = true;
+    int players;
+	static ResourceManager resourcemanager = new ResourceManager(); // global sound manager
+    int smileywidth, smileyheight; // smiley object dimensions
+    float rollangle = 0;
 
-	private Player[] player; // set Players array
-	private AI ai; // set AI
+	ArrayList<Popup> popup = new ArrayList<Popup>(); // popup messages array list
+	ArrayList<Shockwave> shockwave = new ArrayList<Shockwave>(); // shockwave animation list
+	ArrayList<Trail> trail = new ArrayList<Trail>(); // trail animation list
+	ArrayList<BuzzBall> buzzball = new ArrayList<BuzzBall>(); // buzzball fruit array list
+	ArrayList<Ball> ball = new ArrayList<Ball>(); // whiteball array list
+	RollingObjectBitmap[] buzzballbitmaps = resourcemanager.buzzballbitmaps; //buzz ball bitmap
+	PowerManager.WakeLock wakelock;
+	GameSurfaceThread gamesurfacethread;
+	SurfaceHolder surfaceholder;
+	SensorManager sensormanager;
+	Sensor orientation;
+	Random rnd = new Random();
+
+    String[] extralifestrings = new String[] {"OH YEAH!", "WOHOOO!", "YEAH BABY!", "WOOOT!", "AWESOME!", "COOL!", "GREAT!", "YEAH!!", "WAY TO GO!", "YOU ROCK!"};
+    String[] lostlifestrings = new String[] {"YOU SUCK!", "LOSER!", "GO HOME!", "REALLY?!", "WIMP!", "SUCKER!", "HAHAHA!", "YOU MAD?!", "DIE!", "BOOM!"};
+    String[] bumpstrings = new String[] {"BUMP!", "TOINK!", "BOINK!", "BAM!", "WABAM!"};
+    String[] zoomstrings = new String[] {"ZOOM!", "WOOSH!", "SUPER MODE!", "ZOOMBA!", "WARPSPEED!"};
+
+	Player[] player; // set Players array
+	AI ai; // set AI
+
+    int[] ground = new int[2]; // player ground level array
 
 	@Override 
 	public void onCreate(Bundle savedinstancestate) 
 	{
 		super.onCreate(savedinstancestate);
-
 		Log.i(getLocalClassName(), "Activity started");
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -82,7 +89,7 @@ public class GameActivity extends Activity implements SensorEventListener
 		this.wakelock.acquire();
 
 		if (getIntent().getIntExtra("BALLS_COUNT", -1) > 0)
-			ballcount = (short)getIntent().getIntExtra("BALLS_COUNT", -1); // retrieve ball count from main activity
+			ballcount = getIntent().getIntExtra("BALLS_COUNT", -1); // retrieve ball count from main activity
 		
 		sologame = getIntent().getBooleanExtra("SOLO_GAME", false);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
@@ -138,93 +145,13 @@ public class GameActivity extends Activity implements SensorEventListener
 		v.vibrate(time);
 	}
 
-	public boolean isRunning() 
-	{
-		return running;
-	}
-
-	public short getCanvasWidth()
-	{
-		return canvaswidth;
-	}
-
-	public short getCanvasHeight()
-	{
-		return canvasheight;
-	}
-
-	public byte getBallSize()
-	{
-		return ballsize;
-	}
-
-	public ArrayList<Shockwave> getShockwave() 
-	{
-		return shockwave;
-	}
-
-	public short getSmileyHeight()
-	{
-		return smileyheight;
-	}
-
-	public short getGameScore()
-	{
-		return gamescore;
-	}
-
-	public void setGameScore(short score)
-	{
-		this.gamescore = score;
-	}
-
-	public short getSmileyWidth()
-	{
-		return smileywidth;
-	}
-
-	public static ResourceManager getResourceManager() 
-	{
-		return resourcemanager;
-	}
-
-	public ArrayList<Popup> getPopup() 
-	{
-		return popup;
-	}
-
-	public short getLife()
-	{
-		return life;
-	}
-
-	public void setLife(short life)
-	{
-		this.life = life;
-	}
-
-	public ArrayList<Trail> getTrail() 
-	{
-		return trail;
-	}
-
-	public static String getScore() 
-	{
-		return score;
-	}
-
-	public float getRollAngle() 
-	{
-		return rollangle;
-	}
-
-	public Player[] getPlayer()
-	{
-		return player;
-	}
-
 	private class GlobalThread implements Runnable
-	{	
+	{
+        GlobalThread()
+        {
+            start();
+        }
+
 		public void start()
 		{
 			Thread thread = new Thread(this);
@@ -254,15 +181,16 @@ public class GameActivity extends Activity implements SensorEventListener
 				{
 					running =  false;
 					gameover = true;
-					gamesurfacethread.setFlag(false);
+					gamesurfacethread.running = false;
 					resourcemanager.playSound(ResourceManager.SPAWN, 1);
 					showScore();
 				}
-				
+
 				try
 				{
 					Thread.sleep(40);
-				} 
+				}
+
 				catch (InterruptedException e)
 				{
 					e.printStackTrace();
@@ -274,25 +202,21 @@ public class GameActivity extends Activity implements SensorEventListener
 
 	public class MyDraw extends SurfaceView implements Callback
 	{
-		private Bitmap smileyright; // right smiley image
-		private Bitmap smileyleft; // left smiley image
-		private Bitmap smileyshadesright; // right smiley shades image
-		private Bitmap smileyshadesleft; // left smiley shades image
-		private Bitmap back; // background
+		Bitmap smileyright; // right smiley image
+		Bitmap smileyleft; // left smiley image
+		Bitmap smileyshadesright; // right smiley shades image
+		Bitmap smileyshadesleft; // left smiley shades image
+		Bitmap back; // background
 
-		private String[] extralifestrings = new String[] {"OH YEAH!", "WOHOOO!", "YEAH BABY!", "WOOOT!", "AWESOME!", "COOL!", "GREAT!", "YEAH!!", "WAY TO GO!", "YOU ROCK!"};
-		private String[] lostlifestrings = new String[] {"YOU SUCK!", "LOSER!", "GO HOME!", "REALLY?!", "WIMP!", "SUCKER!", "HAHAHA!", "YOU MAD?!", "DIE!", "BOOM!"};
-		private String[] bumpstrings = new String[] {"BUMP!", "TOINK!", "BOINK!", "BAM!", "WABAM!"};
-		private String[] zoomstrings = new String[] {"ZOOM!", "WOOSH!", "SUPER MODE!", "ZOOMBA!", "WARPSPEED!"};
-		private Paint pint = new Paint(); // ball paint
-		private Paint scoretext = new Paint();
-		private Paint popuptext = new Paint();
-		private Paint balltrail = new Paint(); // ball trail
-		private Paint circlestrokepaint = new Paint();
-		private Paint centerlinepaint = new Paint();
-		private Paint shadowpaint = new Paint();
-		private Paint buzzballpaint = new Paint();
-		private GlobalThread globalthread;
+		Paint pint = new Paint(); // ball paint
+		Paint scoretext = new Paint();
+		Paint popuptext = new Paint();
+		Paint balltrail = new Paint(); // ball trail
+		Paint circlestrokepaint = new Paint();
+		Paint centerlinepaint = new Paint();
+		Paint shadowpaint = new Paint();
+		Paint buzzballpaint = new Paint();
+		GlobalThread globalthread;
 
 		public MyDraw(Context context)
 		{
@@ -304,9 +228,12 @@ public class GameActivity extends Activity implements SensorEventListener
 			DisplayMetrics metrics = new DisplayMetrics();
 			getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
-			canvaswidth = (short)metrics.widthPixels;
-			canvasheight = (short)metrics.heightPixels;
-			midpoint = (short)(canvaswidth / 2);
+			canvaswidth = metrics.widthPixels;
+			canvasheight = metrics.heightPixels;
+			midpoint = canvaswidth / 2;
+
+            ground[0] = canvasheight - canvasheight / 3;
+            ground[1] = canvasheight - canvasheight / 4;
 
 			player = new Player[players]; // set Players array
 
@@ -316,8 +243,8 @@ public class GameActivity extends Activity implements SensorEventListener
 			smileyright = BitmapFactory.decodeResource(getResources(), R.drawable.smiley); // create pong image for player
 			Log.i(getLocalClassName(), "Smiley right created");
 
-			smileyheight = (short)smileyright.getHeight(); // store smiley dimensions
-			smileywidth = (short)smileyright.getWidth();
+			smileyheight = smileyright.getHeight(); // store smiley dimensions
+			smileywidth = smileyright.getWidth();
 
 			Matrix matrix = new Matrix();
 			matrix.preScale(-1.0f, 1.0f);
@@ -347,6 +274,7 @@ public class GameActivity extends Activity implements SensorEventListener
 				ballsize = 2;
 				Log.i(getLocalClassName(), "Screen DPI is low, adjustment sizes set to small");
 			}
+
 			else
 			{
 				popuptext.setTextSize(12);
@@ -365,42 +293,26 @@ public class GameActivity extends Activity implements SensorEventListener
 
 			if (sologame)
 			{
-				player[0] = new Player(GameActivity.this, (short)(canvasheight - canvasheight / 4));
-				player[0].getPosition().set(midpoint, canvasheight - canvasheight / 4);
+				player[0] = new Player(GameActivity.this, canvasheight - canvasheight / 4, midpoint, canvasheight - canvasheight / 4);
 				Log.i(getLocalClassName(), "Player0 initialized");
 			}
+
 			else
 			{
-				short[] ground = new short[2]; // player ground level array
-				
-				ground[0] = (short)(canvasheight - canvasheight / 3);
-				ground[1] = (short)(canvasheight - canvasheight / 4);
-				
-				for (byte playercounter = 0; playercounter < player.length; playercounter++) // initialize player and AI
+				for (int playercounter = 0; playercounter < player.length; playercounter++) // initialize player and AI
 				{
-					player[playercounter] = new Player(GameActivity.this, ground[playercounter]);
-					Log.i(getLocalClassName(), "Player" + Integer.toString(playercounter) + " initialized");
-
-					if (playercounter == 0) // if player
-						player[0].getPosition().set(midpoint, ground[playercounter]);
-					
-					else // if AI
-					{
-						ai = new AI(GameActivity.this, ball, player[0]);
-						ai.start();
-						player[playercounter].getPosition().set(midpoint, ground[playercounter]); // set AI start location to 2nd quadrant
-						Log.i(getLocalClassName(), "AI initialized");
-					}
+                    player[playercounter] = new Player(GameActivity.this, ground[playercounter], midpoint, ground[playercounter]);
+                    Log.i(getLocalClassName(), "Player" + Integer.toString(playercounter) + " initialized");
 				}
+                ai = new AI(GameActivity.this, ball, player[0]);
+                Log.i(getLocalClassName(), "AI initialized");
 			}
-			
 			globalthread = new GlobalThread();
-			globalthread.start();
 		}
 
 		public void surfaceDestroyed(SurfaceHolder holder) // when user leaves game
 		{
-			gamesurfacethread.setFlag(false);
+			gamesurfacethread.running = false;
 			running = false ;
 			Log.i(getLocalClassName(), "Surface destroyed");
 		}
@@ -413,7 +325,6 @@ public class GameActivity extends Activity implements SensorEventListener
 		public void surfaceCreated(SurfaceHolder holder) // when user enters game
 		{
 			gamesurfacethread = new GameSurfaceThread(GameActivity.this, holder, this);
-			gamesurfacethread.setFlag(true);
 			gamesurfacethread.start();
 			Log.i(getLocalClassName(), "Surface created");
 		}
@@ -432,115 +343,115 @@ public class GameActivity extends Activity implements SensorEventListener
 		protected void onDraw(Canvas canvas)
 		{
 			canvas.drawBitmap(back, 0, 0, null);
-
-			for (byte playercounter = 0; playercounter < player.length; playercounter++) // draw player
+			for (int playercounter = 0; playercounter < player.length; playercounter++) // draw player
 			{
-				shadowpaint.setAlpha(player[playercounter].getShadowOpacity());
-				canvas.drawOval(player[playercounter].getShadow(), shadowpaint);
+				shadowpaint.setAlpha(player[playercounter].shadowOpacity);
+				canvas.drawOval(player[playercounter].shadow, shadowpaint);
 				if (playercounter == 0)
-					if (player[playercounter].isRight())
-						canvas.drawBitmap(smileyright, player[playercounter].getPosition().x, player[playercounter].getPosition().y, null);
+					if (player[playercounter].right)
+						canvas.drawBitmap(smileyright, player[playercounter].position.x, player[playercounter].position.y, null);
 						else
-						canvas.drawBitmap(smileyleft, player[playercounter].getPosition().x, player[playercounter].getPosition().y, null); // draw player smiley
+						canvas.drawBitmap(smileyleft, player[playercounter].position.x, player[playercounter].position.y, null); // draw player smiley
 				else
-					if (player[playercounter].isRight())
-						canvas.drawBitmap(smileyshadesright, player[playercounter].getPosition().x, player[playercounter].getPosition().y, null);
+					if (player[playercounter].right)
+						canvas.drawBitmap(smileyshadesright, player[playercounter].position.x, player[playercounter].position.y, null);
 					else
-						canvas.drawBitmap(smileyshadesleft, player[playercounter].getPosition().x, player[playercounter].getPosition().y, null); // draw AI smiley
+						canvas.drawBitmap(smileyshadesleft, player[playercounter].position.x, player[playercounter].position.y, null); // draw AI smiley
 			}
 
-			for (short ballcounter = (short)(ball.size() - 1); ballcounter >= 0; ballcounter--) // ball drawer
+			for (int ballcounter = 0; ballcounter < ball.size(); ballcounter++) // ball drawer
 			{
                 Ball currentball = ball.get(ballcounter);
-				if (currentball.isDead())
+				if (currentball.dead)
 					ball.remove(ballcounter);
 				else
-					canvas.drawCircle(currentball.getPosition().x, currentball.getPosition().y, ballsize, pint);
+					canvas.drawCircle(currentball.position.x, currentball.position.y, ballsize, pint);
 			}
 
-			for (short trailcounter = (short)(trail.size() - 1); trailcounter >= 0; trailcounter--) // trail drawer
+			for (int trailcounter = 0; trailcounter < trail.size(); trailcounter++) // trail drawer
 			{
                 Trail currenttrail = trail.get(trailcounter);
-				if (currenttrail.getLife() > 0)
+				if (currenttrail.life > 0)
 				{
 					balltrail.setStrokeWidth(ballsize - currenttrail.calcSize());
-					balltrail.setColor(Color.argb(currenttrail.getLife() * 25, 255, 255, 255));
-					canvas.drawLine(currenttrail.getStartPoint().x, currenttrail.getStartPoint().y, currenttrail.getEndPoint().x, currenttrail.getEndPoint().y, balltrail);
-                    currenttrail.setLife(currenttrail.getLife() - 1);
+					balltrail.setColor(Color.argb(currenttrail.life * 25, 255, 255, 255));
+					canvas.drawLine(currenttrail.startpoint.x, currenttrail.startpoint.y, currenttrail.endpoint.x, currenttrail.endpoint.y, balltrail);
+                    currenttrail.life--;
 				}
+
 				else
 					trail.remove(trailcounter); // remove dead trail
 			}
 
-			for (short shockwavecounter = (short)(shockwave.size() - 1); shockwavecounter >= 0; shockwavecounter--)  // shockwave drawer
+			for (int shockwavecounter = 0; shockwavecounter < shockwave.size(); shockwavecounter++)  // shockwave drawer
 			{
                 Shockwave currentshockwave = shockwave.get(shockwavecounter);
 				if (currentshockwave.getLife() > 0) // bump animation
 				{
-                    short currentshockwavelife = currentshockwave.getLife();
-					switch (currentshockwave.getType())
+                    int currentshockwavelife = currentshockwave.getLife();
+					switch (currentshockwave.type)
 					{
-					case 0: // is small wave animation
-						circlestrokepaint.setColor(Color.argb(currentshockwavelife * 23,255, 255, 255));
-						circlestrokepaint.setStrokeWidth(1);
-						canvas.drawCircle(currentshockwave.getPosition().x, currentshockwave.getPosition().y,11 - currentshockwavelife, circlestrokepaint);
-						break;
-					case 1: // is medium wave animation
-						circlestrokepaint.setColor(Color.argb(currentshockwavelife * 12, 255, 255, 255));
-						circlestrokepaint.setStrokeWidth(2);
-						canvas.drawCircle(currentshockwave.getPosition().x, currentshockwave.getPosition().y,21 - currentshockwavelife, circlestrokepaint);
-						break;
-					case 2: // is big wave animation
-						circlestrokepaint.setColor(Color.argb(currentshockwavelife * 2, 255, 255, 255));
-						circlestrokepaint.setStrokeWidth(1);
-						canvas.drawCircle(currentshockwave.getPosition().x, currentshockwave.getPosition().y,128 - currentshockwavelife, circlestrokepaint);
-						break;
-					case 3: // is super big animation
-						circlestrokepaint.setColor(Color.argb(currentshockwavelife, 255, 255, 255));
-						circlestrokepaint.setStrokeWidth(1);
-						canvas.drawCircle(currentshockwave.getPosition().x, currentshockwave.getPosition().y,252 - currentshockwavelife, circlestrokepaint);
-						break;
+                        case 0: // is small wave animation
+                            circlestrokepaint.setColor(Color.argb(currentshockwavelife * 23,255, 255, 255));
+                            circlestrokepaint.setStrokeWidth(1);
+                            canvas.drawCircle(currentshockwave.position.x, currentshockwave.position.y,11 - currentshockwavelife, circlestrokepaint);
+                            break;
+                        case 1: // is medium wave animation
+                            circlestrokepaint.setColor(Color.argb(currentshockwavelife * 12, 255, 255, 255));
+                            circlestrokepaint.setStrokeWidth(2);
+                            canvas.drawCircle(currentshockwave.position.x, currentshockwave.position.y,21 - currentshockwavelife, circlestrokepaint);
+                            break;
+                        case 2: // is big wave animation
+                            circlestrokepaint.setColor(Color.argb(currentshockwavelife * 2, 255, 255, 255));
+                            circlestrokepaint.setStrokeWidth(1);
+                            canvas.drawCircle(currentshockwave.position.x, currentshockwave.position.y,128 - currentshockwavelife, circlestrokepaint);
+                            break;
+                        case 3: // is super big animation
+                            circlestrokepaint.setColor(Color.argb(currentshockwavelife, 255, 255, 255));
+                            circlestrokepaint.setStrokeWidth(1);
+                            canvas.drawCircle(currentshockwave.position.x, currentshockwave.position.y,252 - currentshockwavelife, circlestrokepaint);
 					}
 				}
+
 				else
 					shockwave.remove(shockwavecounter); // remove dead shockwave
 			}
 
-			for (short popupcounter = (short)(popup.size() - 1); popupcounter >= 0; popupcounter--) // popup text drawer
+			for (int popupcounter = 0; popupcounter < popup.size(); popupcounter++) // popup text drawer
 			{
-				if (popup.get(popupcounter).getCounter() > 0) // if popup text is to be shown
+				if (popup.get(popupcounter).getLife() > 0) // if popup text is to be shown
 				{
-					popuptext.setColor(Color.argb(popup.get(popupcounter).getCounter(), 255, 255, 255)); // text fade effect
+					popuptext.setColor(Color.argb(popup.get(popupcounter).getLife(), 255, 255, 255)); // text fade effect
                     Popup currentpopup = popup.get(popupcounter);
 
-					switch (popup.get(popupcounter).getType()) 
+					switch (popup.get(popupcounter).type)
 					{
-					case 0: // scoreup
-						canvas.drawText(extralifestrings[currentpopup.getTextIndex()], currentpopup.getPosition().x, currentpopup.getPosition().y - currentpopup.getCounter(), popuptext);
-						break;
-					case 1: // lose life
-						canvas.drawText(lostlifestrings[currentpopup.getTextIndex()], currentpopup.getPosition().x, currentpopup.getPosition().y + currentpopup.getCounter(), popuptext);
-						break;
-					case 2: // solo
-						canvas.drawText(extralifestrings[currentpopup.getTextIndex()], currentpopup.getPosition().x, currentpopup.getPosition().y + currentpopup.getCounter(), popuptext);
-						break;
+                        case 0: // scoreup
+                            canvas.drawText(extralifestrings[currentpopup.textindex], currentpopup.position.x, currentpopup.position.y - currentpopup.getLife(), popuptext);
+                            break;
+                        case 1: // lose life
+                            canvas.drawText(lostlifestrings[currentpopup.textindex], currentpopup.position.x, currentpopup.position.y + currentpopup.getLife(), popuptext);
+                            break;
+                        case 2: // solo
+                            canvas.drawText(extralifestrings[currentpopup.textindex], currentpopup.position.x, currentpopup.position.y + currentpopup.getLife(), popuptext);
 					}
 				}
+
 				else
 					popup.remove(popupcounter); // remove dead popup
 			}
 
-			for (short buzzballcounter = (short)(buzzball.size() - 1); buzzballcounter >= 0; buzzballcounter--) // draw buzzball
+			for (int buzzballcounter = 0; buzzballcounter < buzzball.size(); buzzballcounter++) // draw buzzball
 			{
                 BuzzBall currentbuzzball = buzzball.get(buzzballcounter);
-				buzzballpaint.setAlpha(buzzball.get(buzzballcounter).getOpacity());
+				buzzballpaint.setAlpha(buzzball.get(buzzballcounter).opacity);
 				
-				if (currentbuzzball.isDead())
+				if (currentbuzzball.dead)
 					buzzball.remove(buzzballcounter); // cleanup dead buzzballs from array list
-				else if(currentbuzzball.getOpacity() < 0)
-                    currentbuzzball.kill();
+				else if(currentbuzzball.opacity < 0)
+                    currentbuzzball.dead = true;
 				else
-					canvas.drawBitmap(buzzballbitmaps[currentbuzzball.getType()].getFrame(currentbuzzball.getRotation()).getBitmap(), currentbuzzball.getPosition().x + buzzballbitmaps[currentbuzzball.getType()].getFrame(currentbuzzball.getRotation()).getOffset().x, currentbuzzball.getPosition().y + buzzballbitmaps[currentbuzzball.getType()].getFrame(currentbuzzball.getRotation()).getOffset().y, buzzballpaint);
+					canvas.drawBitmap(buzzballbitmaps[currentbuzzball.type].getFrame(currentbuzzball.rotation).bitmap, currentbuzzball.position.x + buzzballbitmaps[currentbuzzball.type].getFrame(currentbuzzball.rotation).offset.x, currentbuzzball.position.y + buzzballbitmaps[currentbuzzball.type].getFrame(currentbuzzball.rotation).offset.y, buzzballpaint);
 			}
 			
 			if (life > 0)
@@ -550,8 +461,8 @@ public class GameActivity extends Activity implements SensorEventListener
 	
 	private void addBuzzBall()
 	{
-		byte type = (byte)rnd.nextInt(buzzballbitmaps.length - 1);
-		buzzball.add(new BuzzBall(GameActivity.this, type, (short)(buzzballbitmaps[type].getHeight()), (short)(buzzballbitmaps[type].getWidth()), ball, player));
+		int type = rnd.nextInt(buzzballbitmaps.length - 1);
+		buzzball.add(new BuzzBall(GameActivity.this, type, buzzballbitmaps[type].height, buzzballbitmaps[type].width, ball, player));
 	}
 
 	public void onAccuracyChanged(Sensor sensor, int integer)

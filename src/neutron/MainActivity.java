@@ -26,7 +26,7 @@ public class MainActivity extends Activity
 	public void onDestroy()
 	{
 		super.onDestroy();
-        GameActivity.getResourceManager().doCleanup();
+        GameActivity.resourcemanager.doCleanup();
 	}
 
 	public void startGame(View view)
