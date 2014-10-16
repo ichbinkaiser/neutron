@@ -59,6 +59,7 @@ final public class BuzzBall implements Runnable
 
 		while(gameactivity.running && (!dead))
 		{
+            ///////////////////////////// BUZZBALL ROTATION AND MOVEMENT //////////////////////////////////////
 			roll = (int)gameactivity.rollangle;
 
 			if ((roll > 0) && (inertia < 10))
@@ -101,7 +102,7 @@ final public class BuzzBall implements Runnable
 					xmovement = -2;
 				}
 			}
-
+            ////////////////////// BUZZBALL TO BALL COLLISION DETECTION /////////////////////////////////
 			for (int ballcounter = 0; ballcounter < ball.size(); ballcounter++)
 			{
                 Ball currentball = ball.get(ballcounter);

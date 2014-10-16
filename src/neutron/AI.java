@@ -31,6 +31,7 @@ final class AI implements Runnable
 	{
 		target.x = gameactivity.canvaswidth / 2;
 
+        ////////////////////////// AI TARGETING LOGI ///////////////////////////////////////
 		while (gameactivity.running) // AI Thread
 		{
 			target.y = 0;

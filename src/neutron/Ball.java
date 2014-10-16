@@ -59,7 +59,8 @@ final class Ball implements Runnable
 	{
 		while ((gameactivity.running) && (!dead))
 		{
-			for (int playercounter = 0; playercounter < player.length; playercounter++) // player collision logic
+            ///////////////////////////// BALL TO PLAYER COLLISION DETECTION //////////////////////////
+			for (int playercounter = 0; playercounter < player.length; playercounter++)
 			{
 				if ((position.y >= player[playercounter].position.y) && (position.y <= player[playercounter].position.y + gameactivity.smileyheight) && (position.x >= player[playercounter].position.x) && (position.x <= player[playercounter].position.x + gameactivity.smileywidth) && (isNotGoingUp())) // player to ball collision detection
 				{	
@@ -85,8 +86,8 @@ final class Ball implements Runnable
 					gameactivity.popup.add(new Popup(position, Popup.SOLO, gameactivity.bumpstrings.length)); // popup text in score++
 				}
 			}
-
-			for (int ballcounter = 0; ballcounter < 0; ballcounter++) // ball to ball collision detection
+            //////////////////////// BALL TO BALL COLLSION DETECTION ///////////////////////////////
+			for (int ballcounter = 0; ballcounter < 0; ballcounter++)
 			{
                 Ball currentball = ball.get(ballcounter);
 				if ((this != currentball) && (!collide)) // if ball is not compared to itself and has not yet collided
@@ -101,9 +102,8 @@ final class Ball implements Runnable
 					}
 				}
 			}
-
 			collide = false;
-
+            ////////////////////////// BALL MOVEMENT AND WORLD BOUNDARY INTERACTION //////////////////////////////////////
 			pposition.x = position.x;
 			pposition.y = position.y;
 
@@ -154,7 +154,7 @@ final class Ball implements Runnable
 				GameActivity.resourcemanager.playSound(ResourceManager.DOWN, 1);
 			}
 
-			else
+			else // ball trailer effects
 			{
 				gameactivity.trail.add(new Trail(pposition, position));
 				gameactivity.shockwave.add(new Shockwave(position, Shockwave.EXTRA_SMALL_WAVE));
