@@ -69,5 +69,4 @@ public class SplashActivity extends Activity
             Log.e("Splash", e.toString());
         }
     }
-
 }
