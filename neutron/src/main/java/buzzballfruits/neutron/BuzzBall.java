@@ -69,8 +69,10 @@ final public class BuzzBall implements Runnable
 
 			rotation += (inertia); // rotation to positive target rotation
 
-			if (rotation > 359) rotation -= 360;
-			else if (rotation < 0) rotation += 360;
+			if (rotation > 359)
+                rotation -= 360;
+			else if (rotation < 0)
+                rotation += 360;
 
 			position.y += climb + gravity;
 			gravity += 0.025f;
@@ -82,7 +84,6 @@ final public class BuzzBall implements Runnable
 				else if (position.x > gameactivity.canvaswidth - width)
 					xmovement = -2;
 			}
-
 			position.x += xmovement;
 
 			if ((position.y > ground) && (!dying))
@@ -96,6 +97,7 @@ final public class BuzzBall implements Runnable
 					inertia = 10;
 					xmovement = 2;
 				}
+
 				else
 				{
 					inertia = -10;
@@ -122,6 +124,7 @@ final public class BuzzBall implements Runnable
                             currentball.goingleft = false;
 							xmovement = 2;
 						}
+
 						else 
 						{
                             currentball.goingleft = true;

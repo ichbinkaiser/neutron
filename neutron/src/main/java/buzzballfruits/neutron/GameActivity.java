@@ -149,20 +149,15 @@ public class GameActivity extends Activity implements SensorEventListener
 		
 		public void run()
 		{
-			int spawn,jumpAI;
-			
 			while (running)
 			{
 				if (ball.size() < ballcount)
 					ball.add(new Ball(GameActivity.this, ball, player)); // maintain ball number
 				
-				spawn = rnd.nextInt(10);
-				jumpAI = rnd.nextInt(100);
-				
-				if (spawn == 0)
+				if (rnd.nextInt(10) == 0)
 					addBuzzBall();
 				
-				if (jumpAI ==0)
+				if (rnd.nextInt(100) ==0)
 					player[1].jump();
 				
 				if ((life < 0) && (!gameover)) // game over condition
@@ -320,10 +315,9 @@ public class GameActivity extends Activity implements SensorEventListener
 		public boolean onTouchEvent(MotionEvent event)
 		{
 			int action = event.getAction();
-			if (action == MotionEvent.ACTION_DOWN)
-			{
+            if (action == MotionEvent.ACTION_DOWN)
 				player[0].jump();
-			}
+
 			return true;
 		}
 
@@ -366,7 +360,6 @@ public class GameActivity extends Activity implements SensorEventListener
 					canvas.drawLine(currenttrail.startpoint.x, currenttrail.startpoint.y, currenttrail.endpoint.x, currenttrail.endpoint.y, balltrail);
                     currenttrail.life--;
 				}
-
 				else
 					trail.remove(trailcounter); // remove dead trail
 			}
@@ -379,28 +372,27 @@ public class GameActivity extends Activity implements SensorEventListener
                     int currentshockwavelife = currentshockwave.getLife();
 					switch (currentshockwave.type)
 					{
-                        case 0: // is small wave animation
-                            circlestrokepaint.setColor(Color.argb(currentshockwavelife * 23,255, 255, 255));
+                        case Shockwave.EXTRA_SMALL_WAVE:
+                            circlestrokepaint.setColor(Color.argb(currentshockwavelife * 23, 255, 255, 255));
                             circlestrokepaint.setStrokeWidth(1);
-                            canvas.drawCircle(currentshockwave.position.x, currentshockwave.position.y,11 - currentshockwavelife, circlestrokepaint);
+                            canvas.drawCircle(currentshockwave.position.x, currentshockwave.position.y, 11 - currentshockwavelife, circlestrokepaint);
                             break;
-                        case 1: // is medium wave animation
+                        case Shockwave.SMALL_WAVE:
                             circlestrokepaint.setColor(Color.argb(currentshockwavelife * 12, 255, 255, 255));
                             circlestrokepaint.setStrokeWidth(2);
-                            canvas.drawCircle(currentshockwave.position.x, currentshockwave.position.y,21 - currentshockwavelife, circlestrokepaint);
+                            canvas.drawCircle(currentshockwave.position.x, currentshockwave.position.y, 21 - currentshockwavelife, circlestrokepaint);
                             break;
-                        case 2: // is big wave animation
+                        case Shockwave.MEDIUM_WAVE:
                             circlestrokepaint.setColor(Color.argb(currentshockwavelife * 2, 255, 255, 255));
                             circlestrokepaint.setStrokeWidth(1);
-                            canvas.drawCircle(currentshockwave.position.x, currentshockwave.position.y,128 - currentshockwavelife, circlestrokepaint);
+                            canvas.drawCircle(currentshockwave.position.x, currentshockwave.position.y, 128 - currentshockwavelife, circlestrokepaint);
                             break;
-                        case 3: // is super big animation
+                        case Shockwave.LARGE_WAVE:
                             circlestrokepaint.setColor(Color.argb(currentshockwavelife, 255, 255, 255));
                             circlestrokepaint.setStrokeWidth(1);
-                            canvas.drawCircle(currentshockwave.position.x, currentshockwave.position.y,252 - currentshockwavelife, circlestrokepaint);
+                            canvas.drawCircle(currentshockwave.position.x, currentshockwave.position.y, 252 - currentshockwavelife, circlestrokepaint);
 					}
 				}
-
 				else
 					shockwave.remove(shockwavecounter); // remove dead shockwave
 			}
@@ -414,17 +406,16 @@ public class GameActivity extends Activity implements SensorEventListener
 
 					switch (popup.get(popupcounter).type)
 					{
-                        case 0: // scoreup
+                        case Popup.SCOREUP:
                             canvas.drawText(extralifestrings[currentpopup.textindex], currentpopup.position.x, currentpopup.position.y - currentpopup.getLife(), popuptext);
                             break;
-                        case 1: // lose life
+                        case Popup.LOSELIFE:
                             canvas.drawText(lostlifestrings[currentpopup.textindex], currentpopup.position.x, currentpopup.position.y + currentpopup.getLife(), popuptext);
                             break;
-                        case 2: // solo
+                        case Popup.SOLO:
                             canvas.drawText(extralifestrings[currentpopup.textindex], currentpopup.position.x, currentpopup.position.y + currentpopup.getLife(), popuptext);
 					}
 				}
-
 				else
 					popup.remove(popupcounter); // remove dead popup
 			}
@@ -441,7 +432,6 @@ public class GameActivity extends Activity implements SensorEventListener
 				else
 					canvas.drawBitmap(buzzballbitmaps[currentbuzzball.type].getFrame(currentbuzzball.rotation).bitmap, currentbuzzball.position.x + buzzballbitmaps[currentbuzzball.type].getFrame(currentbuzzball.rotation).offset.x, currentbuzzball.position.y + buzzballbitmaps[currentbuzzball.type].getFrame(currentbuzzball.rotation).offset.y, buzzballpaint);
 			}
-			
 			if (life > 0)
 				canvas.drawText("Ball Count: " + Integer.toString(ball.size()) + " " + "Score: " + Integer.toString(gamescore) + "  " + "Extra Life: " + Integer.toString(life), 10, canvasheight - 10, scoretext);
 		}
