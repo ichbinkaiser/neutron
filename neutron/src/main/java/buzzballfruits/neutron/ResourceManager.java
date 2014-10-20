@@ -89,12 +89,10 @@ final class ResourceManager
 
 	public void playSound(int index, float speed)
 	{
-		if (soundsloaded==8)
-		{
-			float streamVolume = audiomanager.getStreamVolume(AudioManager.STREAM_MUSIC);
-			streamVolume = streamVolume / audiomanager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-			soundpool.play(sounds.get(index), streamVolume, streamVolume, 1, 0, speed);
-		}
+		float streamVolume = audiomanager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		streamVolume = streamVolume / audiomanager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		soundpool.play(sounds.get(index), streamVolume, streamVolume, 1, 0, speed);
+
 	}
 
 	public void doCleanup()

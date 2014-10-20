@@ -44,17 +44,17 @@ final class Player implements Runnable
 	public void run() 
 	{
 		int edge = gameActivity.canvaswidth - gameActivity.smileywidth;
-		shadowT = ground + (gameActivity.smileyheight - gameActivity.smileyheight / 4);
+		shadowT = ground + gameActivity.smileyheight - gameActivity.smileyheight / 4;
 		shadowB = ground + gameActivity.smileyheight;
 		while (gameActivity.running)
 		{
-			if ((position.x < destination) && (position.x < edge)) // player move right
+			if (position.x < destination && position.x < edge) // player move right
 				if (Math.abs(destination - position.x) > 10)
 					position.x += 5;
 				else
 					position.x++;
 
-			else if ((position.x > destination) && (position.x > 0)) // player move left
+			else if (position.x > destination && position.x > 0) // player move left
 			{
 				if (Math.abs(destination - position.x) > 10)
 					position.x -= 5;
@@ -63,9 +63,9 @@ final class Player implements Runnable
 			}
 
 			if (position.x > pposition.x)
-				right = true; // bottom player has moved right		
+				right = true; // player has moved right
 			else if (position.x < pposition.x)
-				right = false; // bottom player has moved left
+				right = false; // player has moved left
 
 			pposition.set(position.x, position.y);
 
@@ -75,7 +75,7 @@ final class Player implements Runnable
 				gravity += 0.05f;
 			}
 
-			if ((jumping) && (position.y > ground))
+			if (jumping && position.y > ground)
 			{
 				jumping = false;
 				position.y = ground;

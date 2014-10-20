@@ -108,15 +108,16 @@ final public class BuzzBall implements Runnable
 			for (int ballcounter = 0; ballcounter < ball.size(); ballcounter++)
 			{
                 Ball currentball = ball.get(ballcounter);
-				if ((currentball.position.x >= position.x) && (currentball.position.x <= position.x + width) && (currentball.position.y >= position.y) && (currentball.position.y <= position.y + height))
+				if (currentball.position.x >= position.x && currentball.position.x <= position.x + width && currentball.position.y >= position.y && currentball.position.y <= position.y + height)
 				{
 					boolean collided = false;
-					for (int ballcollidedcounter = (ballcollided.size() - 1); ballcollidedcounter >= 0; ballcollidedcounter--)
+					for (int ballcollidedcounter =  0; ballcollidedcounter < ballcollided.size(); ballcollidedcounter++)
 					{
-						if (ballcollided.get(ballcollidedcounter) == ball.get(ballcounter)) collided = true;
+						if (ballcollided.get(ballcollidedcounter) == ball.get(ballcounter))
+                            collided = true;
 					}
 
-					if ((!collided) && (!dying))
+					if (!collided && !dying)
 					{
 
 						if (currentball.goingleft)

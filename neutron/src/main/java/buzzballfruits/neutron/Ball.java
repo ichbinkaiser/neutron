@@ -39,13 +39,13 @@ final class Ball implements Runnable
 		gravity = 0;
 
 		int number = rnd.nextInt(3);
-        goingleft = (number > 1);
+        goingleft = number > 1;
 		start();
 	}
 
 	private boolean checkCollision(Point object) // ball collision detection
 	{
-		return (((object.x <= position.x + gameactivity.ballsize - 1) && (object.x >= position.x - gameactivity.ballsize - 1) && ((object.y <= position.y + gameactivity.ballsize - 1) && (object.y >= position.y - gameactivity.ballsize - 1))));
+		return object.x <= position.x + gameactivity.ballsize - 1 && object.x >= position.x - gameactivity.ballsize - 1 && object.y <= position.y + gameactivity.ballsize - 1 && object.y >= position.y - gameactivity.ballsize - 1;
 	}
 
 	public void start()
@@ -57,12 +57,12 @@ final class Ball implements Runnable
 
 	public void run()
 	{
-		while ((gameactivity.running) && (!dead))
+		while (gameactivity.running && !dead)
 		{
             ///////////////////////////// BALL TO PLAYER COLLISION DETECTION //////////////////////////
 			for (int playercounter = 0; playercounter < player.length; playercounter++)
 			{
-				if ((position.y >= player[playercounter].position.y) && (position.y <= player[playercounter].position.y + gameactivity.smileyheight) && (position.x >= player[playercounter].position.x) && (position.x <= player[playercounter].position.x + gameactivity.smileywidth) && (isNotGoingUp())) // player to ball collision detection
+				if (position.y >= player[playercounter].position.y && position.y <= player[playercounter].position.y + gameactivity.smileyheight && position.x >= player[playercounter].position.x && position.x <= player[playercounter].position.x + gameactivity.smileywidth && isNotGoingUp()) // player to ball collision detection
 				{	
 					climb = -(gravity * 2); // emulate gravity
 					gravity = 0.0f;
@@ -71,7 +71,6 @@ final class Ball implements Runnable
 						climb -= 6;
 					
 					gameactivity.shockwave.add(new Shockwave(position, Shockwave.EXTRA_SMALL_WAVE));
-
                     goingleft = player[playercounter].right;
 
 					if (playercounter == 0)
@@ -90,12 +89,12 @@ final class Ball implements Runnable
 			for (int ballcounter = 0; ballcounter < 0; ballcounter++)
 			{
                 Ball currentball = ball.get(ballcounter);
-				if ((this != currentball) && (!collide)) // if ball is not compared to itself and has not yet collided
+				if (this != currentball && !collide) // if ball is not compared to itself and has not yet collided
 				{
 					if (checkCollision(currentball.position)) // ball collision detected
 					{
 						GameActivity.resourcemanager.playSound(ResourceManager.RESTART, ResourceManager.HIT);
-                        goingleft = !((goingleft) && (!currentball.goingleft)); // go right if bumped ball is going left
+                        goingleft = !goingleft && !currentball.goingleft; // go right if bumped ball is going left
                         currentball.goingleft = !goingleft; // reverse direction of the bumped ball
 						sidewardspeed = rnd.nextInt(5);
                         currentball.collide = true;

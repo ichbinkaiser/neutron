@@ -10,7 +10,6 @@ final class Popup
 	Point position = new Point();
 	int life = 255; // animation index life
 	int type; // popup message type
-	Random rnd = new Random();
 	int textindex; //random text index
 	
 	Popup(Point position, int type, int indexsize)

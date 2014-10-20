@@ -160,11 +160,10 @@ public class GameActivity extends Activity implements SensorEventListener
 				if (rnd.nextInt(100) ==0)
 					player[1].jump();
 				
-				if ((life < 0) && (!gameover)) // game over condition
+				if (life < 0 && !gameover) // game over condition
 				{
 					running =  false;
 					gameover = true;
-					gamesurfacethread.running = false;
 					resourcemanager.playSound(ResourceManager.SPAWN, 1);
 					showScore();
 				}
@@ -196,7 +195,6 @@ public class GameActivity extends Activity implements SensorEventListener
 		Paint popuptext = new Paint();
 		Paint balltrail = new Paint(); // ball trail
 		Paint circlestrokepaint = new Paint();
-		Paint centerlinepaint = new Paint();
 		Paint shadowpaint = new Paint();
 		Paint buzzballpaint = new Paint();
 		GlobalThread globalthread;
@@ -248,8 +246,6 @@ public class GameActivity extends Activity implements SensorEventListener
 			popuptext.setTypeface(myType);
 			popuptext.setTextAlign(Align.CENTER);
 
-			centerlinepaint.setStrokeWidth(3);
-
 			if (metrics.densityDpi == DisplayMetrics.DENSITY_LOW) // adjust to low DPI
 			{
 				popuptext.setTextSize(8);
@@ -295,7 +291,6 @@ public class GameActivity extends Activity implements SensorEventListener
 
 		public void surfaceDestroyed(SurfaceHolder holder) // when user leaves game
 		{
-			gamesurfacethread.running = false;
 			running = false ;
 			Log.i(getLocalClassName(), "Surface destroyed");
 		}
@@ -308,14 +303,12 @@ public class GameActivity extends Activity implements SensorEventListener
 		public void surfaceCreated(SurfaceHolder holder) // when user enters game
 		{
 			gamesurfacethread = new GameSurfaceThread(GameActivity.this, holder, this);
-			gamesurfacethread.start();
 			Log.i(getLocalClassName(), "Surface created");
 		}
 		
 		public boolean onTouchEvent(MotionEvent event)
 		{
-			int action = event.getAction();
-            if (action == MotionEvent.ACTION_DOWN)
+            if (event.getAction() == MotionEvent.ACTION_DOWN)
 				player[0].jump();
 
 			return true;
@@ -332,7 +325,7 @@ public class GameActivity extends Activity implements SensorEventListener
 				if (playercounter == 0)
 					if (player[playercounter].right)
 						canvas.drawBitmap(smileyright, player[playercounter].position.x, player[playercounter].position.y, null);
-						else
+					else
 						canvas.drawBitmap(smileyleft, player[playercounter].position.x, player[playercounter].position.y, null); // draw player smiley
 				else
 					if (player[playercounter].right)
