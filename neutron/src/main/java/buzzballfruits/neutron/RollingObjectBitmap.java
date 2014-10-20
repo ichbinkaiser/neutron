@@ -25,7 +25,7 @@ final public class RollingObjectBitmap
 	{
 		this.frames[frame] = new RollingObjectFrame();
 		this.frames[frame].bitmap = bitmap;
-		this.frames[frame].setOffset(source_centerX - bitmap.getWidth() / 2, source_centerY - bitmap.getHeight() /2);
+		this.frames[frame].setOffset(source_centerX - bitmap.getWidth() / 2, source_centerY - bitmap.getHeight() / 2);
 	}
 	
 	public void setFrame(RollingObjectFrame duplicate, int frame) //dublicate frame
