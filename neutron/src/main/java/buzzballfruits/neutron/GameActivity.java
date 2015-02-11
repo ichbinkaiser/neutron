@@ -53,10 +53,8 @@ public class GameActivity extends Activity implements SensorEventListener
 	Sensor orientation;
 	Random rnd = new Random();
 
-    String[] extralifestrings = new String[] {"OH YEAH!", "WOHOOO!", "YEAH BABY!", "WOOOT!", "AWESOME!", "COOL!", "GREAT!", "YEAH!!", "WAY TO GO!", "YOU ROCK!"};
-    String[] lostlifestrings = new String[] {"YOU SUCK!", "LOSER!", "GO HOME!", "REALLY?!", "WIMP!", "SUCKER!", "HAHAHA!", "YOU MAD?!", "DIE!", "BOOM!"};
-    String[] bumpstrings = new String[] {"BUMP!", "TOINK!", "BOINK!", "BAM!", "WABAM!"};
-    String[] zoomstrings = new String[] {"ZOOM!", "WOOSH!", "SUPER MODE!", "ZOOMBA!", "WARPSPEED!"};
+    String[] yeystrings = new String[] {"OH YEAH!", "WOHOOO!", "YEAH BABY!", "WOOOT!", "AWESOME!", "COOL!", "GREAT!", "YEAH!!", "WAY TO GO!", "YOU ROCK!"};
+    String[] boostrings = new String[] {"YOU SUCK!", "LOSER!", "GO HOME!", "REALLY?!", "WIMP!", "SUCKER!", "HAHAHA!", "YOU MAD?!", "DIE!", "BOOM!"};
 
 	Player[] player; // set Players array
 	AI ai; // set AI
@@ -399,15 +397,15 @@ public class GameActivity extends Activity implements SensorEventListener
 
 					switch (popup.get(popupcounter).type)
 					{
-                        case Popup.SCOREUP:
-                            canvas.drawText(extralifestrings[currentpopup.textindex], currentpopup.position.x, currentpopup.position.y - currentpopup.getLife(), popuptext);
+                        case Popup.YEY:
+                            canvas.drawText(yeystrings[currentpopup.textindex], currentpopup.position.x, currentpopup.position.y - currentpopup.getLife(), popuptext);
                             break;
-                        case Popup.LOSELIFE:
-                            canvas.drawText(lostlifestrings[currentpopup.textindex], currentpopup.position.x, currentpopup.position.y + currentpopup.getLife(), popuptext);
+                        case Popup.BOO:
+                            canvas.drawText(boostrings[currentpopup.textindex], currentpopup.position.x, currentpopup.position.y + currentpopup.getLife(), popuptext);
                             break;
-                        case Popup.SOLO:
-                            canvas.drawText(extralifestrings[currentpopup.textindex], currentpopup.position.x, currentpopup.position.y + currentpopup.getLife(), popuptext);
-					}
+                        case Popup.BUMP:
+                            canvas.drawText(yeystrings[currentpopup.textindex], currentpopup.position.x, currentpopup.position.y + currentpopup.getLife(), popuptext);
+                    }
 				}
 				else
 					popup.remove(popupcounter); // remove dead popup

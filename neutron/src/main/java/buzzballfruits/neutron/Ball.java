@@ -82,7 +82,7 @@ final class Ball implements Runnable
 					GameActivity.resourcemanager.playSound(ResourceManager.POP, 1);
 
 					sidewardspeed = rnd.nextInt(5);
-					gameactivity.popup.add(new Popup(position, Popup.SOLO, gameactivity.bumpstrings.length)); // popup text in score++
+					gameactivity.popup.add(new Popup(position, Popup.BUMP, gameactivity.yeystrings.length)); // popup text in score++
 				}
 			}
             //////////////////////// BALL TO BALL COLLSION DETECTION ///////////////////////////////
@@ -135,7 +135,7 @@ final class Ball implements Runnable
 			if (position.y > gameactivity.canvasheight) // ball has fallen off screen
 			{
 				gameactivity.life--;
-				gameactivity.popup.add(new Popup(position, 1, gameactivity.lostlifestrings.length));
+				gameactivity.popup.add(new Popup(position, 1, gameactivity.boostrings.length));
 				GameActivity.resourcemanager.playSound(ResourceManager.DOWN, 1);
 				gameactivity.doShake(100);
 
