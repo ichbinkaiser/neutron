@@ -7,18 +7,18 @@ import java.util.ArrayList;
 
 final class AI implements Runnable
 {
-	GameActivity gameactivity;
-	ArrayList<Ball> ball = new ArrayList<Ball>();
+	GameActivity gameActivity;
+	ArrayList<Ball> ball = new ArrayList<>();
 
-	Point playerposition = new Point(); // Player location
-	Point target = new Point(); // top ball threat
+	Point playerPosition = new Point(); // Player location
+	Point target = new Point(); // top balls threat
 
 	AI(GameActivity gameActivity, ArrayList<Ball> ball, Player player)
 	{
-		this.gameactivity = gameActivity;
+		this.gameActivity = gameActivity;
 		this.ball = ball;
-		playerposition = player.position;
-        start();
+		playerPosition = player.position;
+		start();
 	}
 
 	public void start()
@@ -30,31 +30,32 @@ final class AI implements Runnable
 
 	public void run()
 	{
-		target.x = gameactivity.canvaswidth / 2;
+		target.x = gameActivity.canvasWidth / 2;
 
-        ////////////////////////// AI TARGETING LOGI ///////////////////////////////////////
-		while (gameactivity.running) // AI Thread
+		////////////////////////// AI TARGETING LOGI ///////////////////////////////////////
+		while (gameActivity.running) // AI Thread
 		{
 			target.y = 0;
-			for (int ballcounter = 0; ballcounter < ball.size(); ballcounter++)
+			for (Ball currentBall : ball)
 			{
-                Ball currentball = ball.get(ballcounter);
-				currentball.targetable = currentball.position.x <= playerposition.x && currentball.position.x <= playerposition.x + gameactivity.smileywidth; // if not true ball is a valid AI target
-				
-				if (!currentball.dead && currentball.isNotGoingUp() && currentball.targetable && currentball.position.y > target.y)
-                    target.set(currentball.position.x - gameactivity.smileywidth / 2, currentball.position.y - gameactivity.smileyheight / 2); // check for priority target
+				currentBall.canBeTargeted = currentBall.position.x <= playerPosition.x && currentBall.position.x <= playerPosition.x + gameActivity.smileyWidth; // if not true balls is a valid AI target
+
+				if (!currentBall.dead && currentBall.isNotGoingUp() && currentBall.canBeTargeted && currentBall.position.y > target.y)
+				{
+					target.set(currentBall.position.x - gameActivity.smileyWidth / 2, currentBall.position.y - gameActivity.smileyHeight / 2); // check for priority target
+				}
 			}
-			gameactivity.player[1].setDestination(target.x); // set AI target
+			gameActivity.players[1].setDestination(target.x); // set AI target
 
 			try
 			{
 				Thread.sleep(10);
 			}
 
-			catch (InterruptedException e)
+			catch (InterruptedException interruptedException)
 			{
-				e.printStackTrace();
-				Log.e("AI", e.toString());
+				interruptedException.printStackTrace();
+				Log.e("AI", interruptedException.toString());
 			}
 		}
 	}

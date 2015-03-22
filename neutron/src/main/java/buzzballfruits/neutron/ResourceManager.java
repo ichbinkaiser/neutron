@@ -12,22 +12,26 @@ import android.util.SparseIntArray;
 
 final class ResourceManager
 {
-    final static int POP = 1, LIFE_UP = 2, DING = 3, POPWALL = 4, DOWN = 5, HIT = 6, RESTART = 7, SPAWN = 8;
+	enum Sound
+	{
+		POP, LIFE_UP, DING, POPWALL, DOWN, HIT, RESTART, SPAWN
+	}
+
 	SoundPool soundpool;
 	SparseIntArray sounds;
-	AudioManager  audiomanager;
+	AudioManager audioManager;
 	Context context;
-	int soundsloaded = 0;
-    int bitmapsloaded = 0;
+	int soundsLoaded = 0;
+	int bitmapsLoaded = 0;
 
-    int[] drawablelibrary = new int[] {R.drawable.buzzball1, R.drawable.buzzball2, R.drawable.buzzball3, R.drawable.buzzball4, R.drawable.buzzball5, R.drawable.buzzball6};
-	int[] soundlibrary = new int[] {R.raw.pop, R.raw.lifeup, R.raw.ding, R.raw.popwall, R.raw.down, R.raw.hit, R.raw.restart, R.raw.spawn};
+	int[] drawableLibrary = new int[]{R.drawable.buzzball1, R.drawable.buzzball2, R.drawable.buzzball3, R.drawable.buzzball4, R.drawable.buzzball5, R.drawable.buzzball6};
+	int[] soundLibrary = new int[]{R.raw.pop, R.raw.lifeup, R.raw.ding, R.raw.popwall, R.raw.down, R.raw.hit, R.raw.restart, R.raw.spawn};
 
-    RollingObjectBitmap[] buzzballbitmaps = new RollingObjectBitmap[drawablelibrary.length]; //buzz ball bitmap
+	RollingObjectBitmap[] buzzBallBitmaps = new RollingObjectBitmap[drawableLibrary.length]; //buzz balls bitmap
 
 	public int getBitmapsSize()
 	{
-		return buzzballbitmaps.length * 360;
+		return buzzBallBitmaps.length * 360;
 	}
 
 	public void initSounds(Context context)
@@ -35,63 +39,69 @@ final class ResourceManager
 		this.context = context;
 		soundpool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
 		sounds = new SparseIntArray();
-		audiomanager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+		audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 	}
 
 	public void loadSounds() // load sounds to IntArray
 	{
-		soundsloaded = 0;
-		soundpool.setOnLoadCompleteListener(new OnLoadCompleteListener() {
-			public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-				soundsloaded++;
+		soundsLoaded = 0;
+		soundpool.setOnLoadCompleteListener(new OnLoadCompleteListener()
+		{
+			public void onLoadComplete(SoundPool soundPool, int sampleId, int status)
+			{
+				soundsLoaded++;
 				Log.i("ResourceManager", "Sample" + Integer.toString(sampleId) + " loaded");
 			}
 		});
 
-		for (int soundindex = 0; soundindex < soundlibrary.length; soundindex++)
+		for (int soundindex = 0; soundindex < soundLibrary.length; soundindex++)
 		{
-			sounds.put(soundindex + 1, soundpool.load(context, soundlibrary[soundindex], 1));
+			sounds.put(soundindex + 1, soundpool.load(context, soundLibrary[soundindex], 1));
 		}
 	}
 
 	public void loadBitmaps()
 	{
 		Matrix buzzball_matrix = new Matrix();
-		for (int bitmapindex = 0; bitmapindex < buzzballbitmaps.length; bitmapindex++)
+		for (int bitmapindex = 0; bitmapindex < buzzBallBitmaps.length; bitmapindex++)
 		{
 			int centerX, centerY, source_width, source_height;
 			Bitmap source;
 
-			centerX = BitmapFactory.decodeResource(context.getResources(), drawablelibrary[bitmapindex]).getWidth() / 2;
-			centerY = BitmapFactory.decodeResource(context.getResources(), drawablelibrary[bitmapindex]).getHeight() / 2;
+			centerX = BitmapFactory.decodeResource(context.getResources(), drawableLibrary[bitmapindex]).getWidth() / 2;
+			centerY = BitmapFactory.decodeResource(context.getResources(), drawableLibrary[bitmapindex]).getHeight() / 2;
 
-			source = BitmapFactory.decodeResource(context.getResources(), drawablelibrary[bitmapindex]);
-			source_width = BitmapFactory.decodeResource(context.getResources(), drawablelibrary[bitmapindex]).getWidth();
-			source_height = BitmapFactory.decodeResource(context.getResources(), drawablelibrary[bitmapindex]).getHeight();
+			source = BitmapFactory.decodeResource(context.getResources(), drawableLibrary[bitmapindex]);
+			source_width = BitmapFactory.decodeResource(context.getResources(), drawableLibrary[bitmapindex]).getWidth();
+			source_height = BitmapFactory.decodeResource(context.getResources(), drawableLibrary[bitmapindex]).getHeight();
 
 			Log.i("ResourceManager", "Source buzzball " + bitmapindex + " created.");
-			buzzballbitmaps[bitmapindex] = new RollingObjectBitmap(centerX , centerY, source_width, source_height);
+			buzzBallBitmaps[bitmapindex] = new RollingObjectBitmap(centerX, centerY, source_width, source_height);
 
 			for (int frame = 0; frame < 360; frame++)
 			{
 				buzzball_matrix.setRotate(frame, centerX, centerY);
-				
+
 				if (frame % 2 == 0)
-					buzzballbitmaps[bitmapindex].setFrame(Bitmap.createBitmap(source, 0, 0, source_width, source_height, buzzball_matrix, true), frame);
+				{
+					buzzBallBitmaps[bitmapindex].setFrame(Bitmap.createBitmap(source, 0, 0, source_width, source_height, buzzball_matrix, true), frame);
+				}
 				else
-					buzzballbitmaps[bitmapindex].setFrame(buzzballbitmaps[bitmapindex].getFrame(frame -1), frame);
-				
-				bitmapsloaded++;
+				{
+					buzzBallBitmaps[bitmapindex].setFrame(buzzBallBitmaps[bitmapindex].getFrame(frame - 1), frame);
+				}
+
+				bitmapsLoaded++;
 			}
 			Log.i("ResourceManager", "Successfully created Buzzball bitmap " + Integer.toString(bitmapindex));
 		}
 	}
 
-	public void playSound(int index, float speed)
+	public void playSound(Sound sound, float speed)
 	{
-		float streamVolume = audiomanager.getStreamVolume(AudioManager.STREAM_MUSIC);
-		streamVolume = streamVolume / audiomanager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-		soundpool.play(sounds.get(index), streamVolume, streamVolume, 1, 0, speed);
+		float streamVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		streamVolume = streamVolume / audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		soundpool.play(sounds.get(sound.ordinal() + 1), streamVolume, streamVolume, 1, 0, speed);
 
 	}
 

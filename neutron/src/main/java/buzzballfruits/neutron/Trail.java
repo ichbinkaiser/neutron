@@ -2,38 +2,38 @@ package buzzballfruits.neutron;
 
 import android.graphics.Point;
 
-final class Trail 
+final class Trail
 {
-	Point startpoint = new Point(); //start point
-	Point endpoint = new Point(); //end point
+	Point startPoint = new Point(); //start point
+	Point endPoint = new Point(); //end point
 	int life = 10; // animation index
-	
-	Trail(Point startpoint, Point endpoint)
+
+	Trail(Point startPoint, Point endPoint)
 	{
-		this.startpoint.x = startpoint.x;
-		this.startpoint.y = startpoint.y;
-		this.endpoint.x = endpoint.x;
-		this.endpoint.y = endpoint.y;
+		this.startPoint.x = startPoint.x;
+		this.startPoint.y = startPoint.y;
+		this.endPoint.x = endPoint.x;
+		this.endPoint.y = endPoint.y;
 	}
-	
+
 	int calcSize()
 	{
 		switch (life)
 		{
-		case 9:
-		case 8:
-		case 7:
-			return 1;
-		case 6:
-		case 5:
-		case 4:
-			return 2;
-		case 3:
-		case 2:
-		case 1:
-			return 3;
-		default:
-			return 0;
+			case 9:
+			case 8:
+			case 7:
+				return 1;
+			case 6:
+			case 5:
+			case 4:
+				return 2;
+			case 3:
+			case 2:
+			case 1:
+				return 3;
+			default:
+				return 0;
 		}
 	}
 }

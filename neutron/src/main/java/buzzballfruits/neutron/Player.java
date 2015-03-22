@@ -10,7 +10,7 @@ final class Player implements Runnable
 {
 	GameActivity gameActivity;
 	Point position = new Point();
-	Point pposition = new Point(); // last position
+	Point previousPosition = new Point(); // last position
 
 	float climb; // upward force
 	float gravity = 0.0f; // downward force
@@ -18,19 +18,19 @@ final class Player implements Runnable
 
 	boolean right = true; // is left direction
 	boolean jumping = false; // is jumping
-    int ground; // basepoint for player
+	int ground; // base point for playerCount
 
 	Random rnd = new Random();
 	float shadowL, shadowT, shadowR, shadowB, shadowEdge; // shadow properties
-    int shadowOpacity;
+	int shadowOpacity;
 	RectF shadow = new RectF();
-    int jumpheight;
+	int jumpHeight;
 
 	Player(GameActivity gameActivity, int ground, int x, int y)
 	{
 		this.gameActivity = gameActivity;
 		this.ground = ground;
-        position.set(x,y);
+		position.set(x, y);
 		start();
 	}
 
@@ -41,33 +41,47 @@ final class Player implements Runnable
 		thread.start();
 	}
 
-	public void run() 
+	public void run()
 	{
-		int edge = gameActivity.canvaswidth - gameActivity.smileywidth;
-		shadowT = ground + gameActivity.smileyheight - gameActivity.smileyheight / 4;
-		shadowB = ground + gameActivity.smileyheight;
+		int edge = gameActivity.canvasWidth - gameActivity.smileyWidth;
+		shadowT = ground + gameActivity.smileyHeight - gameActivity.smileyHeight / 4;
+		shadowB = ground + gameActivity.smileyHeight;
 		while (gameActivity.running)
 		{
-			if (position.x < destination && position.x < edge) // player move right
-				if (Math.abs(destination - position.x) > 10)
-					position.x += 5;
-				else
-					position.x++;
-
-			else if (position.x > destination && position.x > 0) // player move left
+			if (position.x < destination && position.x < edge) // playerCount move right
 			{
 				if (Math.abs(destination - position.x) > 10)
-					position.x -= 5;
+				{
+					position.x += 5;
+				}
 				else
-					position.x--;
+				{
+					position.x++;
+				}
 			}
 
-			if (position.x > pposition.x)
-				right = true; // player has moved right
-			else if (position.x < pposition.x)
-				right = false; // player has moved left
+			else if (position.x > destination && position.x > 0) // playerCount move left
+			{
+				if (Math.abs(destination - position.x) > 10)
+				{
+					position.x -= 5;
+				}
+				else
+				{
+					position.x--;
+				}
+			}
 
-			pposition.set(position.x, position.y);
+			if (position.x > previousPosition.x)
+			{
+				right = true; // playerCount has moved right
+			}
+			else if (position.x < previousPosition.x)
+			{
+				right = false; // playerCount has moved left
+			}
+
+			previousPosition.set(position.x, position.y);
 
 			if (jumping)
 			{
@@ -82,16 +96,16 @@ final class Player implements Runnable
 				gravity = 0.0f;
 			}
 
-			jumpheight = (ground - position.y) / 10;
-			
-			if (jumpheight < gameActivity.smileywidth / 4)
+			jumpHeight = (ground - position.y) / 10;
+
+			if (jumpHeight < gameActivity.smileyWidth / 4)
 			{
-				shadowEdge = jumpheight;
-				shadowOpacity = 50 - jumpheight * 2;
+				shadowEdge = jumpHeight;
+				shadowOpacity = 50 - jumpHeight * 2;
 			}
-			
+
 			shadowL = position.x + shadowEdge;
-			shadowR = position.x + gameActivity.smileywidth - shadowEdge;
+			shadowR = position.x + gameActivity.smileyWidth - shadowEdge;
 
 			shadow.set(shadowL, shadowT, shadowR, shadowB);
 
@@ -110,20 +124,24 @@ final class Player implements Runnable
 
 	public void jump() // do jump
 	{
-		climb = -(float)(rnd.nextInt(2) + 6); // upward force
+		climb = -(float) (rnd.nextInt(2) + 6); // upward force
 		jumping = true;
 	}
 
 	public void setDestination(float roll)
 	{
-		if (roll<0)
-			destination = (int)(position.x + Math.abs(roll*5));
-		else if (roll>0)
-			destination = (int)(position.x - Math.abs(roll*5));
+		if (roll < 0)
+		{
+			destination = (int) (position.x + Math.abs(roll * 5));
+		}
+		else if (roll > 0)
+		{
+			destination = (int) (position.x - Math.abs(roll * 5));
+		}
 	}
 
-    public void setDestination(int target)
-    {
-        destination = target;
-    }
+	public void setDestination(int target)
+	{
+		destination = target;
+	}
 }

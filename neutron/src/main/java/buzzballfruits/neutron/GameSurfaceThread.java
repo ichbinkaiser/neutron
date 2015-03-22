@@ -3,43 +3,46 @@ package buzzballfruits.neutron;
 import android.graphics.Canvas;
 import android.util.Log;
 import android.view.SurfaceHolder;
-import buzzballfruits.neutron.GameActivity.MyDraw;
 
-final class GameSurfaceThread extends Thread 
+import buzzballfruits.neutron.GameActivity.GameScreen;
+
+final class GameSurfaceThread extends Thread
 {
-	GameActivity gameactivity;
-	SurfaceHolder myholder;
-	MyDraw mydraw;
-	
-	public GameSurfaceThread(GameActivity gameactivity, SurfaceHolder holder , MyDraw drawmain)
+	GameActivity gameActivity;
+	SurfaceHolder surfaceHolder;
+	GameScreen gameScreen;
+
+	public GameSurfaceThread(GameActivity gameActivity, SurfaceHolder holder, GameScreen gameScreen)
 	{
-		this.gameactivity = gameactivity;
+		this.gameActivity = gameActivity;
 		setName("SurfaceView");
-		myholder = holder;
-		mydraw = drawmain;
-        start();
+		surfaceHolder = holder;
+		this.gameScreen = gameScreen;
+		start();
 	}
 
 	public void run()
 	{
 		Canvas canvas = null;
-		while(gameactivity.running)
+		while (gameActivity.running)
 		{
 			try
 			{
-				canvas = myholder.lockCanvas(null);
-				mydraw.onDraw(canvas);
+				canvas = surfaceHolder.lockCanvas(null);
+				gameScreen.onDraw(canvas);
 			}
 
 			catch (NullPointerException e)
 			{
-				Log.e(this.gameactivity.getLocalClassName(), e.toString());
+				Log.e(this.gameActivity.getLocalClassName(), e.toString());
 			}
 
 			finally
 			{
-				if(canvas != null)
-					myholder.unlockCanvasAndPost(canvas);
+				if (canvas != null)
+				{
+					surfaceHolder.unlockCanvasAndPost(canvas);
+				}
 			}
 		}
 	}

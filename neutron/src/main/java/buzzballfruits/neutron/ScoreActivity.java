@@ -7,11 +7,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-public class ScoreActivity extends Activity 
+public class ScoreActivity extends Activity
 {
 
 	@Override
-	public void onCreate(Bundle savedinstancestate) 
+	public void onCreate(Bundle savedinstancestate)
 	{
 		super.onCreate(savedinstancestate);
 

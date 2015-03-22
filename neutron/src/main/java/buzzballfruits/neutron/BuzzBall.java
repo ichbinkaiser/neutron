@@ -8,39 +8,39 @@ import java.util.Random;
 
 final public class BuzzBall implements Runnable
 {
-    Player[] player; // player pointer
-	GameActivity gameactivity;
+	Player[] player; // playerCount pointer
+	GameActivity gameActivity;
 
 	int rotation = 0;
-    int type; // buzzball type
+	int type; // buzzBalls type
 	int height, width;
 	boolean dead = false, dying = false;
 
 	float gravity = 0.0f;
 	float climb = 3; // upward force
-	int xmovement = 0;
+	int xMovement = 0;
 
-	ArrayList<Ball> ball;
-	ArrayList<Ball>	ballcollided = new ArrayList<Ball>(); // array list of balls that have collided with this buzzball
+	ArrayList<Ball> balls;
+	ArrayList<Ball> ballsCollided = new ArrayList<>(); // array list of balls that have collided with this buzzBalls
 
-    Point position = new Point();
-    Point pposition = new Point();
+	Point position = new Point();
+	Point previousPosition = new Point();
 
-    Random rnd = new Random();
+	Random rnd = new Random();
 
-    float inertia = 0;
+	float inertia = 0;
 	int opacity = 255;
-    int ground; //groung bounce for buzzball
+	int ground; // ground bounce for buzzBalls
 
-	BuzzBall(GameActivity gameActivity, int type, int height, int width, ArrayList<Ball> ball, Player[] player)
+	BuzzBall(GameActivity gameActivity, int type, int height, int width, ArrayList<Ball> balls, Player[] player)
 	{
-		this.gameactivity = gameActivity;
+		this.gameActivity = gameActivity;
 		this.type = type;
 		this.height = height;
 		this.width = width;
-		this.ball = ball;
+		this.balls = balls;
 		this.player = player;
-		position.x = rnd.nextInt(gameActivity.canvaswidth - width);
+		position.x = rnd.nextInt(gameActivity.canvasWidth - width);
 		position.y = 0 - height;
 		start();
 	}
@@ -55,24 +55,32 @@ final public class BuzzBall implements Runnable
 	public void run()
 	{
 		int roll;
-		ground = (gameactivity.ground[1] - rnd.nextInt(gameactivity.ground[1] - gameactivity.ground[0])); // set random ground for buzzball in a specific range
+		ground = (gameActivity.ground[1] - rnd.nextInt(gameActivity.ground[1] - gameActivity.ground[0])); // set random ground for buzzBalls in a specific range
 
-		while(gameactivity.running && (!dead))
+		while (gameActivity.running && (!dead))
 		{
-            ///////////////////////////// BUZZBALL ROTATION AND MOVEMENT //////////////////////////////////////
-			roll = (int)gameactivity.rollangle;
+			///////////////////////////// BUZZBALL ROTATION AND MOVEMENT //////////////////////////////////////
+			roll = (int) gameActivity.rollAngle;
 
 			if ((roll > 0) && (inertia < 10))
+			{
 				inertia += .05;
+			}
 			else if ((roll < 0) && (inertia > -10))
+			{
 				inertia -= .05;
+			}
 
 			rotation += (inertia); // rotation to positive target rotation
 
 			if (rotation > 359)
-                rotation -= 360;
+			{
+				rotation -= 360;
+			}
 			else if (rotation < 0)
-                rotation += 360;
+			{
+				rotation += 360;
+			}
 
 			position.y += climb + gravity;
 			gravity += 0.025f;
@@ -80,11 +88,15 @@ final public class BuzzBall implements Runnable
 			if (!dying)
 			{
 				if (position.x < 0) // left or right movement responding to collision with screen boundaries
-					xmovement = 2;
-				else if (position.x > gameactivity.canvaswidth - width)
-					xmovement = -2;
+				{
+					xMovement = 2;
+				}
+				else if (position.x > gameActivity.canvasWidth - width)
+				{
+					xMovement = -2;
+				}
 			}
-			position.x += xmovement;
+			position.x += xMovement;
 
 			if ((position.y > ground) && (!dying))
 			{
@@ -95,61 +107,64 @@ final public class BuzzBall implements Runnable
 				if (rnd.nextBoolean())
 				{
 					inertia = 10;
-					xmovement = 2;
+					xMovement = 2;
 				}
 
 				else
 				{
 					inertia = -10;
-					xmovement = -2;
+					xMovement = -2;
 				}
 			}
-            ////////////////////// BUZZBALL TO BALL COLLISION DETECTION /////////////////////////////////
-			for (int ballcounter = 0; ballcounter < ball.size(); ballcounter++)
+			////////////////////// BUZZBALL TO BALL COLLISION DETECTION /////////////////////////////////
+			for (Ball ball : balls)
 			{
-                Ball currentball = ball.get(ballcounter);
-				if (currentball.position.x >= position.x && currentball.position.x <= position.x + width && currentball.position.y >= position.y && currentball.position.y <= position.y + height)
+				if (ball.position.x >= position.x && ball.position.x <= position.x + width && ball.position.y >= position.y && ball.position.y <= position.y + height)
 				{
 					boolean collided = false;
-					for (int ballcollidedcounter =  0; ballcollidedcounter < ballcollided.size(); ballcollidedcounter++)
+					for (Ball ballCollided : ballsCollided)
 					{
-						if (ballcollided.get(ballcollidedcounter) == ball.get(ballcounter))
-                            collided = true;
+						if (ballCollided == ball)
+						{
+							collided = true;
+						}
 					}
 
 					if (!collided && !dying)
 					{
 
-						if (currentball.goingleft)
+						if (ball.goingLeft)
 						{
-                            currentball.goingleft = false;
-							xmovement = 2;
+							ball.goingLeft = false;
+							xMovement = 2;
 						}
 
-						else 
+						else
 						{
-                            currentball.goingleft = true;
-							xmovement = -2;
+							ball.goingLeft = true;
+							xMovement = -2;
 						}
-						ballcollided.add(currentball);
+						ballsCollided.add(ball);
 					}
 				}
 			}
 
-			pposition.x = position.x;
-			pposition.y = position.y;
+			previousPosition.x = position.x;
+			previousPosition.y = position.y;
 
 			if (dying)
+			{
 				opacity--;
+			}
 
 			try
 			{
 				Thread.sleep(10);
 			}
-			catch (InterruptedException e)
+			catch (InterruptedException interruptedException)
 			{
-				e.printStackTrace();
-				Log.e("BuzzBall", e.toString());
+				interruptedException.printStackTrace();
+				Log.e("BuzzBall", interruptedException.toString());
 			}
 		}
 	}

@@ -8,44 +8,44 @@ import java.util.Random;
 
 final class Ball implements Runnable
 {
-	GameActivity gameactivity;
-	ArrayList<Ball> ball = new ArrayList<Ball>(); // ball pointer
-	Player[] player; // player pointer
+	GameActivity gameActivity;
+	ArrayList<Ball> balls = new ArrayList<>(); // balls pointer
+	Player[] players; // playerCount pointer
 
 	float climb; // upward force
 	float gravity; // downward force
 
-	boolean dead = false; // ball is removed from ball list
+	boolean dead = false; // balls is removed from balls list
 
 	Point position = new Point();
-	Point pposition = new Point(); // previous position
+	Point previousPosition = new Point(); // previous position
 
-    Random rnd = new Random();
-	int sidewardspeed = rnd.nextInt(5);
-	boolean goingleft; // is left ball direction
+	Random rnd = new Random();
+	int sidewaysSpeed = rnd.nextInt(5);
+	boolean goingLeft; // is left balls direction
 	boolean collide; // has collided
-	int spawnwave = 0;
-	boolean targetable = true;
+	int spawnWave = 0;
+	boolean canBeTargeted = true;
 
-	Ball(GameActivity gameActivity, ArrayList<Ball> ball, Player[] player)
+	Ball(GameActivity gameActivity, ArrayList<Ball> balls, Player[] players)
 	{
-		this.gameactivity = gameActivity;
-		this.ball = ball;
-		this.player = player;
+		this.gameActivity = gameActivity;
+		this.balls = balls;
+		this.players = players;
 
-		position.x = rnd.nextInt(gameActivity.canvaswidth);
-		position.y = gameActivity.canvasheight;
-		climb = -(float)(rnd.nextInt(3) + 12); // upward force
+		position.x = rnd.nextInt(gameActivity.canvasWidth);
+		position.y = gameActivity.canvasHeight;
+		climb = -(float) (rnd.nextInt(3) + 12); // upward force
 		gravity = 0;
 
 		int number = rnd.nextInt(3);
-        goingleft = number > 1;
+		goingLeft = number > 1;
 		start();
 	}
 
-	private boolean checkCollision(Point object) // ball collision detection
+	private boolean checkCollision(Point object) // balls collision detection
 	{
-		return object.x <= position.x + gameactivity.ballsize - 1 && object.x >= position.x - gameactivity.ballsize - 1 && object.y <= position.y + gameactivity.ballsize - 1 && object.y >= position.y - gameactivity.ballsize - 1;
+		return object.x <= position.x + gameActivity.ballSize - 1 && object.x >= position.x - gameActivity.ballSize - 1 && object.y <= position.y + gameActivity.ballSize - 1 && object.y >= position.y - gameActivity.ballSize - 1;
 	}
 
 	public void start()
@@ -57,106 +57,106 @@ final class Ball implements Runnable
 
 	public void run()
 	{
-		while (gameactivity.running && !dead)
+		while (gameActivity.running && !dead)
 		{
-            ///////////////////////////// BALL TO PLAYER COLLISION DETECTION //////////////////////////
-			for (int playercounter = 0; playercounter < player.length; playercounter++)
+			///////////////////////////// BALL TO PLAYER COLLISION DETECTION //////////////////////////
+			for (Player currentPlayer : players)
 			{
-				if (position.y >= player[playercounter].position.y && position.y <= player[playercounter].position.y + gameactivity.smileyheight && position.x >= player[playercounter].position.x && position.x <= player[playercounter].position.x + gameactivity.smileywidth && isNotGoingUp()) // player to ball collision detection
-				{	
+				if (position.y >= currentPlayer.position.y && position.y <= currentPlayer.position.y + gameActivity.smileyHeight && position.x >= currentPlayer.position.x && position.x <= currentPlayer.position.x + gameActivity.smileyWidth && isNotGoingUp()) // playerCount to balls collision detection
+				{
 					climb = -(gravity * 2); // emulate gravity
 					gravity = 0.0f;
-					
-					if (player[playercounter].position.y > player[playercounter].position.y)
-						climb -= 6;
-					
-					gameactivity.shockwave.add(new Shockwave(position, Shockwave.EXTRA_SMALL_WAVE));
-                    goingleft = player[playercounter].right;
 
-					if (playercounter == 0)
+					gameActivity.shockWaves.add(new ShockWave(position, ShockWave.EXTRA_SMALL_WAVE));
+					goingLeft = currentPlayer.right;
+
+					if (currentPlayer == players[0]) // if human players
 					{
-						gameactivity.gamescore++;
-						gameactivity.doShake(40);
+						gameActivity.gameScore++;
+						gameActivity.doShake(40);
 					}
 
-					GameActivity.resourcemanager.playSound(ResourceManager.POP, 1);
+					GameActivity.RESOURCEMANAGER.playSound(ResourceManager.Sound.POP, 1);
 
-					sidewardspeed = rnd.nextInt(5);
-					gameactivity.popup.add(new Popup(position, Popup.BUMP, gameactivity.yeystrings.length)); // popup text in score++
+					sidewaysSpeed = rnd.nextInt(5);
+					gameActivity.popups.add(new Popup(position, Popup.Type.BUMP, gameActivity.yeyStrings.length)); // popups text in score++
 				}
 			}
-            //////////////////////// BALL TO BALL COLLSION DETECTION ///////////////////////////////
-			for (int ballcounter = 0; ballcounter < 0; ballcounter++)
+			//////////////////////// BALL TO BALL COLLISION DETECTION ///////////////////////////////
+			for (Ball currentBall : balls)
 			{
-                Ball currentball = ball.get(ballcounter);
-				if (this != currentball && !collide) // if ball is not compared to itself and has not yet collided
+				if (this != currentBall && !collide) // if balls is not compared to itself and has not yet collided
 				{
-					if (checkCollision(currentball.position)) // ball collision detected
+					if (checkCollision(currentBall.position)) // balls collision detected
 					{
-						GameActivity.resourcemanager.playSound(ResourceManager.RESTART, ResourceManager.HIT);
-                        goingleft = !goingleft && !currentball.goingleft; // go right if bumped ball is going left
-                        currentball.goingleft = !goingleft; // reverse direction of the bumped ball
-						sidewardspeed = rnd.nextInt(5);
-                        currentball.collide = true;
+						GameActivity.RESOURCEMANAGER.playSound(ResourceManager.Sound.RESTART, 1);
+						goingLeft = !goingLeft && !currentBall.goingLeft; // go right if bumped balls is going left
+						currentBall.goingLeft = !goingLeft; // reverse direction of the bumped balls
+						sidewaysSpeed = rnd.nextInt(5);
+						currentBall.collide = true;
 					}
 				}
 			}
 			collide = false;
-            ////////////////////////// BALL MOVEMENT AND WORLD BOUNDARY INTERACTION //////////////////////////////////////
-			pposition.x = position.x;
-			pposition.y = position.y;
+			////////////////////////// BALL MOVEMENT AND WORLD BOUNDARY INTERACTION //////////////////////////////////////
+			previousPosition.x = position.x;
+			previousPosition.y = position.y;
 
 			position.y += climb + gravity * gravity;
 			gravity += 0.05f;
 
-			if (goingleft)
-				position.x += sidewardspeed;
+			if (goingLeft)
+			{
+				position.x += sidewaysSpeed;
+			}
 			else
-				position.x -= sidewardspeed; // ball horizontal movement
-
-			if (spawnwave > 0) // spawn_wave animation
 			{
-				gameactivity.shockwave.add(new Shockwave(position, Shockwave.SMALL_WAVE));
-				spawnwave--;
+				position.x -= sidewaysSpeed; // balls horizontal movement
 			}
 
-			if (position.x < 0) // ball has reached left wall
+			if (spawnWave > 0) // spawn_wave animation
 			{
-				goingleft = true;
-				GameActivity.resourcemanager.playSound(ResourceManager.POPWALL, 1);
+				gameActivity.shockWaves.add(new ShockWave(position, ShockWave.SMALL_WAVE));
+				spawnWave--;
 			}
 
-			if (position.x > gameactivity.canvaswidth) // ball has reached right wall
+			if (position.x < 0) // balls has reached left wall
 			{
-				goingleft = false;
-				GameActivity.resourcemanager.playSound(ResourceManager.POPWALL, 1);
+				goingLeft = true;
+				GameActivity.RESOURCEMANAGER.playSound(ResourceManager.Sound.POPWALL, 1);
 			}
 
-			if (position.y > gameactivity.canvasheight) // ball has fallen off screen
+			if (position.x > gameActivity.canvasWidth) // balls has reached right wall
 			{
-				gameactivity.life--;
-				gameactivity.popup.add(new Popup(position, 1, gameactivity.boostrings.length));
-				GameActivity.resourcemanager.playSound(ResourceManager.DOWN, 1);
-				gameactivity.doShake(100);
+				goingLeft = false;
+				GameActivity.RESOURCEMANAGER.playSound(ResourceManager.Sound.POPWALL, 1);
+			}
 
-				try 
+			if (position.y > gameActivity.canvasHeight) // balls has fallen off screen
+			{
+				gameActivity.life--;
+				gameActivity.popups.add(new Popup(position, Popup.Type.YEY, gameActivity.booStrings.length));
+				GameActivity.RESOURCEMANAGER.playSound(ResourceManager.Sound.DOWN, 1);
+				gameActivity.doShake(100);
+
+				try
 				{
 					Thread.sleep(1000);
 				}
 
-				catch (InterruptedException e) 
+				catch (InterruptedException interuptedException)
 				{
-					e.printStackTrace();
-					Log.e("Ball", e.toString());
+					interuptedException.printStackTrace();
+					Log.e("Ball", interuptedException.toString());
 				}
 				dead = true;
-				GameActivity.resourcemanager.playSound(ResourceManager.DOWN, 1);
+				GameActivity.RESOURCEMANAGER.playSound(ResourceManager.Sound.DOWN, 1);
 			}
 
-			else // ball trailer effects
+			else // balls trailer effects
 			{
-				gameactivity.trail.add(new Trail(pposition, position));
-				gameactivity.shockwave.add(new Shockwave(position, Shockwave.EXTRA_SMALL_WAVE));
+				gameActivity.trails.add(new Trail(previousPosition, position));
+				gameActivity.shockWaves.add(new ShockWave(position, ShockWave.EXTRA_SMALL_WAVE));
 			}
 
 			try
@@ -164,16 +164,16 @@ final class Ball implements Runnable
 				Thread.sleep(40);
 			}
 
-			catch (InterruptedException e)
+			catch (InterruptedException interruptedException)
 			{
-				e.printStackTrace();
-				Log.e("Ball", e.toString());
+				interruptedException.printStackTrace();
+				Log.e("Ball", interruptedException.toString());
 			}
 		}
 	}
 
 	public boolean isNotGoingUp()
 	{
-		return (pposition.y <= position.y);
+		return (previousPosition.y <= position.y);
 	}
 }
