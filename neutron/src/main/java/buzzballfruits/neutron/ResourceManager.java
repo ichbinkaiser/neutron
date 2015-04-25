@@ -29,12 +29,12 @@ final class ResourceManager
 
 	RollingObjectBitmap[] buzzBallBitmaps = new RollingObjectBitmap[drawableLibrary.length]; //buzz balls bitmap
 
-	public int getBitmapsSize()
+	int getBitmapsSize()
 	{
 		return buzzBallBitmaps.length * 360;
 	}
 
-	public void initSounds(Context context)
+	void initSounds(Context context)
 	{
 		this.context = context;
 		soundpool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
@@ -42,7 +42,7 @@ final class ResourceManager
 		audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 	}
 
-	public void loadSounds() // load sounds to IntArray
+	void loadSounds() // load sounds to IntArray
 	{
 		soundsLoaded = 0;
 		soundpool.setOnLoadCompleteListener(new OnLoadCompleteListener()
@@ -60,7 +60,7 @@ final class ResourceManager
 		}
 	}
 
-	public void loadBitmaps()
+	void loadBitmaps()
 	{
 		Matrix buzzball_matrix = new Matrix();
 		for (int bitmapindex = 0; bitmapindex < buzzBallBitmaps.length; bitmapindex++)
@@ -97,7 +97,7 @@ final class ResourceManager
 		}
 	}
 
-	public void playSound(Sound sound, float speed)
+	void playSound(Sound sound, float speed)
 	{
 		float streamVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 		streamVolume = streamVolume / audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -105,7 +105,7 @@ final class ResourceManager
 
 	}
 
-	public void doCleanup()
+	void doCleanup()
 	{
 		soundpool.release();
 	}
