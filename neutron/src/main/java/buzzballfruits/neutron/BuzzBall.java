@@ -3,8 +3,8 @@ package buzzballfruits.neutron;
 import android.graphics.Point;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 final public class BuzzBall implements Runnable
 {
@@ -20,8 +20,8 @@ final public class BuzzBall implements Runnable
 	float climb = 3; // upward force
 	int xMovement = 0;
 
-	ArrayList<Ball> balls;
-	ArrayList<Ball> ballsCollided = new ArrayList<>(); // array list of balls that have collided with this buzzBalls
+	CopyOnWriteArrayList<Ball> balls;
+	CopyOnWriteArrayList<Ball> ballsCollided = new CopyOnWriteArrayList<>(); // array list of balls that have collided with this buzzBalls
 
 	Point position = new Point();
 	Point previousPosition = new Point();
@@ -32,7 +32,7 @@ final public class BuzzBall implements Runnable
 	int opacity = 255;
 	int ground; // ground bounce for buzzBalls
 
-	BuzzBall(GameActivity gameActivity, int type, int height, int width, ArrayList<Ball> balls, Player[] player)
+	BuzzBall(GameActivity gameActivity, int type, int height, int width, CopyOnWriteArrayList<Ball> balls, Player[] player)
 	{
 		this.gameActivity = gameActivity;
 		this.type = type;

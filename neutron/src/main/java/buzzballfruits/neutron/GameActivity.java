@@ -31,6 +31,7 @@ import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameActivity extends Activity implements SensorEventListener
 {
@@ -45,15 +46,15 @@ public class GameActivity extends Activity implements SensorEventListener
 	int ballSize;
 	boolean soloGame = true;
 	int playerCount;
-	static ResourceManager RESOURCEMANAGER = new ResourceManager(); // global resource manager
+	static ResourceManager RESOURCEMANAGER; // global resource manager
 	int smileyWidth, smileyHeight; // smiley object dimensions
 	float rollAngle = 0;
 
 	ArrayList<Popup> popups = new ArrayList<>(); // popups messages array list
-	ArrayList<ShockWave> shockWaves = new ArrayList<>(); // shockWaves animation list
-	ArrayList<Trail> trails = new ArrayList<>(); // trails animation list
-	ArrayList<BuzzBall> buzzBalls = new ArrayList<>(); // buzzBalls fruit array list
-	ArrayList<Ball> balls = new ArrayList<>(); // whiteball array list
+	CopyOnWriteArrayList<ShockWave> shockWaves = new CopyOnWriteArrayList<>(); // shockWaves animation list
+	CopyOnWriteArrayList<Trail> trails = new CopyOnWriteArrayList<>(); // trails animation list
+	CopyOnWriteArrayList<BuzzBall> buzzBalls = new CopyOnWriteArrayList<>(); // buzzBalls fruit array list
+	CopyOnWriteArrayList<Ball> balls = new CopyOnWriteArrayList<>(); // whiteball array list
 	RollingObjectBitmap[] buzzBallBitmaps = RESOURCEMANAGER.buzzBallBitmaps; //buzz balls bitmap
 	PowerManager.WakeLock wakelock;
 	GameSurfaceThread gameSurfaceThread;
@@ -71,9 +72,9 @@ public class GameActivity extends Activity implements SensorEventListener
 	int[] ground = new int[2]; // playerCount ground level array
 
 	@Override
-	public void onCreate(Bundle savedinstancestate)
+	public void onCreate(Bundle savedInstanceState)
 	{
-		super.onCreate(savedinstancestate);
+		super.onCreate(savedInstanceState);
 		Log.i(getLocalClassName(), "Activity started");
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);

@@ -19,9 +19,18 @@ public class SplashActivity extends Activity
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		setContentView(R.layout.activity_splash);
-		GameActivity.RESOURCEMANAGER.initSounds(this);
 
-		loader.start();
+		if (!GameActivity.RESOURCEMANAGER.loaded)
+		{
+			GameActivity.RESOURCEMANAGER.initSounds(this);
+			loader.start();
+		}
+
+		else
+		{
+			showMain(); // done loading show go to main
+		}
+
 	}
 
 	public void showMain()
@@ -54,6 +63,7 @@ public class SplashActivity extends Activity
 				pause(1500);
 			}
 
+			GameActivity.RESOURCEMANAGER.loaded = true;
 			showMain(); // done loading show go to main
 		}
 	}

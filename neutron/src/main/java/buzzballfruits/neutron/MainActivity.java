@@ -12,9 +12,9 @@ import android.widget.EditText;
 public class MainActivity extends Activity
 {
 	@Override
-	public void onCreate(Bundle savedinstancestate)
+	public void onCreate(Bundle savedInstanceState)
 	{
-		super.onCreate(savedinstancestate);
+		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_main);
@@ -24,7 +24,6 @@ public class MainActivity extends Activity
 	public void onDestroy()
 	{
 		super.onDestroy();
-		GameActivity.RESOURCEMANAGER.doCleanup();
 	}
 
 	public void startGame(View view)

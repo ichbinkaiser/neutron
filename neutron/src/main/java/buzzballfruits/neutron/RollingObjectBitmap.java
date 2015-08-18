@@ -18,7 +18,7 @@ final public class RollingObjectBitmap
 
 	public RollingObjectFrame getFrame(int frame)
 	{
-		return frames[frame];
+		return frame < 0 || frame > 360 ? frames[0] : frames[frame];
 	}
 
 	public void setFrame(Bitmap bitmap, int frame)

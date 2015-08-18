@@ -3,17 +3,17 @@ package buzzballfruits.neutron;
 import android.graphics.Point;
 import android.util.Log;
 
-import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 final class AI implements Runnable
 {
 	GameActivity gameActivity;
-	ArrayList<Ball> ball = new ArrayList<>();
+	CopyOnWriteArrayList<Ball> ball = new CopyOnWriteArrayList<>();
 
 	Point playerPosition = new Point(); // Player location
 	Point target = new Point(); // top balls threat
 
-	AI(GameActivity gameActivity, ArrayList<Ball> ball, Player player)
+	AI(GameActivity gameActivity, CopyOnWriteArrayList<Ball> ball, Player player)
 	{
 		this.gameActivity = gameActivity;
 		this.ball = ball;
@@ -32,7 +32,7 @@ final class AI implements Runnable
 	{
 		target.x = gameActivity.canvasWidth / 2;
 
-		////////////////////////// AI TARGETING LOGI ///////////////////////////////////////
+		////////////////////////// AI TARGETING LOGIC ///////////////////////////////////////
 		while (gameActivity.running) // AI Thread
 		{
 			target.y = 0;

@@ -14,9 +14,9 @@ final class ResourceManager
 {
 	enum Sound
 	{
-		POP, LIFE_UP, DING, POPWALL, DOWN, HIT, RESTART, SPAWN
+		POP, LIFE_UP, DING, POP_WALL, DOWN, HIT, RESTART, SPAWN
 	}
-
+	boolean loaded = false;
 	SoundPool soundpool;
 	SparseIntArray sounds;
 	AudioManager audioManager;
@@ -54,46 +54,46 @@ final class ResourceManager
 			}
 		});
 
-		for (int soundindex = 0; soundindex < soundLibrary.length; soundindex++)
+		for (int soundIndex = 0; soundIndex < soundLibrary.length; soundIndex++)
 		{
-			sounds.put(soundindex + 1, soundpool.load(context, soundLibrary[soundindex], 1));
+			sounds.put(soundIndex + 1, soundpool.load(context, soundLibrary[soundIndex], 1));
 		}
 	}
 
 	void loadBitmaps()
 	{
-		Matrix buzzball_matrix = new Matrix();
-		for (int bitmapindex = 0; bitmapindex < buzzBallBitmaps.length; bitmapindex++)
+		Matrix buzzBallMatrix = new Matrix();
+		for (int bitmapIndex = 0; bitmapIndex < buzzBallBitmaps.length; bitmapIndex++)
 		{
 			int centerX, centerY, source_width, source_height;
 			Bitmap source;
 
-			centerX = BitmapFactory.decodeResource(context.getResources(), drawableLibrary[bitmapindex]).getWidth() / 2;
-			centerY = BitmapFactory.decodeResource(context.getResources(), drawableLibrary[bitmapindex]).getHeight() / 2;
+			centerX = BitmapFactory.decodeResource(context.getResources(), drawableLibrary[bitmapIndex]).getWidth() / 2;
+			centerY = BitmapFactory.decodeResource(context.getResources(), drawableLibrary[bitmapIndex]).getHeight() / 2;
 
-			source = BitmapFactory.decodeResource(context.getResources(), drawableLibrary[bitmapindex]);
-			source_width = BitmapFactory.decodeResource(context.getResources(), drawableLibrary[bitmapindex]).getWidth();
-			source_height = BitmapFactory.decodeResource(context.getResources(), drawableLibrary[bitmapindex]).getHeight();
+			source = BitmapFactory.decodeResource(context.getResources(), drawableLibrary[bitmapIndex]);
+			source_width = BitmapFactory.decodeResource(context.getResources(), drawableLibrary[bitmapIndex]).getWidth();
+			source_height = BitmapFactory.decodeResource(context.getResources(), drawableLibrary[bitmapIndex]).getHeight();
 
-			Log.i("ResourceManager", "Source buzzball " + bitmapindex + " created.");
-			buzzBallBitmaps[bitmapindex] = new RollingObjectBitmap(centerX, centerY, source_width, source_height);
+			Log.i("ResourceManager", "Source buzz ball " + bitmapIndex + " created.");
+			buzzBallBitmaps[bitmapIndex] = new RollingObjectBitmap(centerX, centerY, source_width, source_height);
 
 			for (int frame = 0; frame < 360; frame++)
 			{
-				buzzball_matrix.setRotate(frame, centerX, centerY);
+				buzzBallMatrix.setRotate(frame, centerX, centerY);
 
 				if (frame % 2 == 0)
 				{
-					buzzBallBitmaps[bitmapindex].setFrame(Bitmap.createBitmap(source, 0, 0, source_width, source_height, buzzball_matrix, true), frame);
+					buzzBallBitmaps[bitmapIndex].setFrame(Bitmap.createBitmap(source, 0, 0, source_width, source_height, buzzBallMatrix, true), frame);
 				}
 				else
 				{
-					buzzBallBitmaps[bitmapindex].setFrame(buzzBallBitmaps[bitmapindex].getFrame(frame - 1), frame);
+					buzzBallBitmaps[bitmapIndex].setFrame(buzzBallBitmaps[bitmapIndex].getFrame(frame - 1), frame);
 				}
 
 				bitmapsLoaded++;
 			}
-			Log.i("ResourceManager", "Successfully created Buzzball bitmap " + Integer.toString(bitmapindex));
+			Log.i("ResourceManager", "Successfully created buzz ball bitmap " + Integer.toString(bitmapIndex));
 		}
 	}
 
@@ -102,7 +102,6 @@ final class ResourceManager
 		float streamVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
 		streamVolume = streamVolume / audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		soundpool.play(sounds.get(sound.ordinal() + 1), streamVolume, streamVolume, 1, 0, speed);
-
 	}
 
 	void doCleanup()
