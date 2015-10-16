@@ -29,7 +29,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -46,15 +46,15 @@ public class GameActivity extends Activity implements SensorEventListener
 	int ballSize;
 	boolean soloGame = true;
 	int playerCount;
-	static ResourceManager RESOURCEMANAGER; // global resource manager
+	static ResourceManager RESOURCEMANAGER = new ResourceManager(); // global resource manager
 	int smileyWidth, smileyHeight; // smiley object dimensions
 	float rollAngle = 0;
 
-	ArrayList<Popup> popups = new ArrayList<>(); // popups messages array list
-	CopyOnWriteArrayList<ShockWave> shockWaves = new CopyOnWriteArrayList<>(); // shockWaves animation list
-	CopyOnWriteArrayList<Trail> trails = new CopyOnWriteArrayList<>(); // trails animation list
-	CopyOnWriteArrayList<BuzzBall> buzzBalls = new CopyOnWriteArrayList<>(); // buzzBalls fruit array list
-	CopyOnWriteArrayList<Ball> balls = new CopyOnWriteArrayList<>(); // whiteball array list
+	List<Popup> popups = new CopyOnWriteArrayList<>(); // popups messages array list
+	List<ShockWave> shockWaves = new CopyOnWriteArrayList<>(); // shockWaves animation list
+	List<Trail> trails = new CopyOnWriteArrayList<>(); // trails animation list
+	List<BuzzBall> buzzBalls = new CopyOnWriteArrayList<>(); // buzzBalls fruit array list
+	List<Ball> balls = new CopyOnWriteArrayList<>(); // whiteball array list
 	RollingObjectBitmap[] buzzBallBitmaps = RESOURCEMANAGER.buzzBallBitmaps; //buzz balls bitmap
 	PowerManager.WakeLock wakelock;
 	GameSurfaceThread gameSurfaceThread;
@@ -92,18 +92,11 @@ public class GameActivity extends Activity implements SensorEventListener
 		soloGame = getIntent().getBooleanExtra("SOLO_GAME", false);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
 
-		if (soloGame)
-		{
-			playerCount = 1;
-		}
-		else
-		{
-			playerCount = 2;
-		}
+		playerCount = soloGame ? 1 : 2;
 
 		LinearLayout lLayout = new LinearLayout(getApplicationContext());
-		GameScreen mydraw = new GameScreen(getApplicationContext()); // set SurfaceView
-		lLayout.addView(mydraw);
+		GameScreen myDraw = new GameScreen(getApplicationContext()); // set SurfaceView
+		lLayout.addView(myDraw);
 		setContentView(lLayout);
 
 		sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);

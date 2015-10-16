@@ -3,13 +3,13 @@ package buzzballfruits.neutron;
 import android.graphics.Point;
 import android.util.Log;
 
+import java.util.List;
 import java.util.Random;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 final class Ball implements Runnable
 {
 	GameActivity gameActivity;
-	CopyOnWriteArrayList<Ball> balls = new CopyOnWriteArrayList<>(); // balls pointer
+	List<Ball> balls; // balls pointer
 	Player[] players; // playerCount pointer
 
 	float climb; // upward force
@@ -27,7 +27,7 @@ final class Ball implements Runnable
 	int spawnWave = 0;
 	boolean canBeTargeted = true;
 
-	Ball(GameActivity gameActivity, CopyOnWriteArrayList<Ball> balls, Player[] players)
+	Ball(GameActivity gameActivity, List<Ball> balls, Player[] players)
 	{
 		this.gameActivity = gameActivity;
 		this.balls = balls;
