@@ -29,7 +29,7 @@ final class GameSurfaceThread extends Thread
 			try
 			{
 				canvas = surfaceHolder.lockCanvas(null);
-				gameScreen.onDraw(canvas);
+				gameScreen.screenDraw(canvas);
 			}
 
 			catch (NullPointerException e)

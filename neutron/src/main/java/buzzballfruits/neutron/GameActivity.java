@@ -54,7 +54,7 @@ public class GameActivity extends Activity implements SensorEventListener
 	List<ShockWave> shockWaves = new CopyOnWriteArrayList<>(); // shockWaves animation list
 	List<Trail> trails = new CopyOnWriteArrayList<>(); // trails animation list
 	List<BuzzBall> buzzBalls = new CopyOnWriteArrayList<>(); // buzzBalls fruit array list
-	List<Ball> balls = new CopyOnWriteArrayList<>(); // whiteball array list
+	List<Ball> balls = new CopyOnWriteArrayList<>(); // white ball array list
 	RollingObjectBitmap[] buzzBallBitmaps = RESOURCEMANAGER.buzzBallBitmaps; //buzz balls bitmap
 	PowerManager.WakeLock wakelock;
 	GameSurfaceThread gameSurfaceThread;
@@ -177,7 +177,7 @@ public class GameActivity extends Activity implements SensorEventListener
 				{
 					running = false;
 					gameOver = true;
-					RESOURCEMANAGER.playSound(ResourceManager.Sound.SPAWN, 1);
+					RESOURCEMANAGER.playSound(Sound.SPAWN, 1);
 					showScore();
 				}
 
@@ -247,10 +247,10 @@ public class GameActivity extends Activity implements SensorEventListener
 			Log.i(getLocalClassName(), "Smiley left created");
 
 			smileyShadesRight = BitmapFactory.decodeResource(getResources(), R.drawable.smiley2); // create pong image for playerCount
-			Log.i(getLocalClassName(), "Smileyshades right created");
+			Log.i(getLocalClassName(), "Smiley shades right created");
 
 			smileyShadesLeft = Bitmap.createBitmap(smileyShadesRight, 0, 0, smileyShadesRight.getWidth(), smileyShadesRight.getHeight(), matrix, true);
-			Log.i(getLocalClassName(), "Smileyshades left created");
+			Log.i(getLocalClassName(), "Smiley shades left created");
 
 			Typeface myType = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
 			scoreText.setColor(Color.WHITE);
@@ -333,8 +333,7 @@ public class GameActivity extends Activity implements SensorEventListener
 			return true;
 		}
 
-		@Override
-		protected void onDraw(Canvas canvas)
+		protected void screenDraw(Canvas canvas)
 		{
 			canvas.drawBitmap(back, 0, 0, null);
 			for (Player player : players) // draw playerCount

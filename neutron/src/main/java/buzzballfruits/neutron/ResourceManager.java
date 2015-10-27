@@ -12,10 +12,6 @@ import android.util.SparseIntArray;
 
 final class ResourceManager
 {
-	enum Sound
-	{
-		POP, LIFE_UP, DING, POP_WALL, DOWN, HIT, RESTART, SPAWN
-	}
 	boolean loaded = false;
 	SoundPool soundpool;
 	SparseIntArray sounds;

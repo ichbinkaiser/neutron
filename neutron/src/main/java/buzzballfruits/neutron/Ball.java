@@ -76,10 +76,10 @@ final class Ball implements Runnable
 						gameActivity.doShake(40);
 					}
 
-					GameActivity.RESOURCEMANAGER.playSound(ResourceManager.Sound.POP, 1);
+					GameActivity.RESOURCEMANAGER.playSound(Sound.POP, 1);
 
 					sidewaysSpeed = rnd.nextInt(5);
-					gameActivity.popups.add(new Popup(position, Popup.Type.BUMP, gameActivity.yeyStrings.length)); // popups text in score++
+					gameActivity.popups.add(new Popup(position, PopupType.BUMP, gameActivity.yeyStrings.length)); // popups text in score++
 				}
 			}
 			//////////////////////// BALL TO BALL COLLISION DETECTION ///////////////////////////////
@@ -89,7 +89,7 @@ final class Ball implements Runnable
 				{
 					if (checkCollision(currentBall.position)) // balls collision detected
 					{
-						GameActivity.RESOURCEMANAGER.playSound(ResourceManager.Sound.RESTART, 1);
+						GameActivity.RESOURCEMANAGER.playSound(Sound.RESTART, 1);
 						goingLeft = !goingLeft && !currentBall.goingLeft; // go right if bumped balls is going left
 						currentBall.goingLeft = !goingLeft; // reverse direction of the bumped balls
 						sidewaysSpeed = rnd.nextInt(5);
@@ -123,20 +123,20 @@ final class Ball implements Runnable
 			if (position.x < 0) // balls has reached left wall
 			{
 				goingLeft = true;
-				GameActivity.RESOURCEMANAGER.playSound(ResourceManager.Sound.POP_WALL, 1);
+				GameActivity.RESOURCEMANAGER.playSound(Sound.POP_WALL, 1);
 			}
 
 			if (position.x > gameActivity.canvasWidth) // balls has reached right wall
 			{
 				goingLeft = false;
-				GameActivity.RESOURCEMANAGER.playSound(ResourceManager.Sound.POP_WALL, 1);
+				GameActivity.RESOURCEMANAGER.playSound(Sound.POP_WALL, 1);
 			}
 
 			if (position.y > gameActivity.canvasHeight) // balls has fallen off screen
 			{
 				gameActivity.life--;
-				gameActivity.popups.add(new Popup(position, Popup.Type.YEY, gameActivity.booStrings.length));
-				GameActivity.RESOURCEMANAGER.playSound(ResourceManager.Sound.DOWN, 1);
+				gameActivity.popups.add(new Popup(position, PopupType.YEY, gameActivity.booStrings.length));
+				GameActivity.RESOURCEMANAGER.playSound(Sound.DOWN, 1);
 				gameActivity.doShake(100);
 
 				try
@@ -144,13 +144,13 @@ final class Ball implements Runnable
 					Thread.sleep(1000);
 				}
 
-				catch (InterruptedException interuptedException)
+				catch (InterruptedException interruptedException)
 				{
-					interuptedException.printStackTrace();
-					Log.e("Ball", interuptedException.toString());
+					interruptedException.printStackTrace();
+					Log.e("Ball", interruptedException.toString());
 				}
 				dead = true;
-				GameActivity.RESOURCEMANAGER.playSound(ResourceManager.Sound.DOWN, 1);
+				GameActivity.RESOURCEMANAGER.playSound(Sound.DOWN, 1);
 			}
 
 			else // balls trailer effects

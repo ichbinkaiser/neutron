@@ -6,17 +6,13 @@ import java.util.Random;
 
 final class Popup
 {
-	enum Type
-	{
-		YEY, BOO, BUMP
-	}
 
 	Point position = new Point();
 	int life = 255; // animation index life
-	Type type; // popups message type
+	PopupType type; // popups message type
 	int textIndex; //random text index
 
-	Popup(Point position, Type type, int textIndexSize)
+	Popup(Point position, PopupType type, int textIndexSize)
 	{
 		Random rnd = new Random();
 		if (textIndexSize > 0)
