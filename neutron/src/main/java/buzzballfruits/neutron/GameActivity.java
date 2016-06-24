@@ -398,22 +398,22 @@ public class GameActivity extends Activity implements SensorEventListener
 					int currentShockWaveLife = shockWave.getLife();
 					switch (shockWave.type)
 					{
-						case ShockWave.EXTRA_SMALL_WAVE:
+						case EXTRA_SMALL_WAVE:
 							circleStrokePaint.setColor(Color.argb(currentShockWaveLife * 23, 255, 255, 255));
 							circleStrokePaint.setStrokeWidth(1);
 							canvas.drawCircle(shockWave.position.x, shockWave.position.y, 11 - currentShockWaveLife, circleStrokePaint);
 							break;
-						case ShockWave.SMALL_WAVE:
+						case SMALL_WAVE:
 							circleStrokePaint.setColor(Color.argb(currentShockWaveLife * 12, 255, 255, 255));
 							circleStrokePaint.setStrokeWidth(2);
 							canvas.drawCircle(shockWave.position.x, shockWave.position.y, 21 - currentShockWaveLife, circleStrokePaint);
 							break;
-						case ShockWave.MEDIUM_WAVE:
+						case MEDIUM_WAVE:
 							circleStrokePaint.setColor(Color.argb(currentShockWaveLife * 2, 255, 255, 255));
 							circleStrokePaint.setStrokeWidth(1);
 							canvas.drawCircle(shockWave.position.x, shockWave.position.y, 128 - currentShockWaveLife, circleStrokePaint);
 							break;
-						case ShockWave.LARGE_WAVE:
+						case LARGE_WAVE:
 							circleStrokePaint.setColor(Color.argb(currentShockWaveLife, 255, 255, 255));
 							circleStrokePaint.setStrokeWidth(1);
 							canvas.drawCircle(shockWave.position.x, shockWave.position.y, 252 - currentShockWaveLife, circleStrokePaint);

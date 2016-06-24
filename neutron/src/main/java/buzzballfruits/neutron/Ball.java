@@ -67,7 +67,7 @@ final class Ball implements Runnable
 					climb = -(gravity * 2); // emulate gravity
 					gravity = 0.0f;
 
-					gameActivity.shockWaves.add(new ShockWave(position, ShockWave.EXTRA_SMALL_WAVE));
+					gameActivity.shockWaves.add(new ShockWave(position, ShockWaveType.EXTRA_SMALL_WAVE));
 					goingLeft = currentPlayer.right;
 
 					if (currentPlayer == players[0]) // if human players
@@ -116,7 +116,7 @@ final class Ball implements Runnable
 
 			if (spawnWave > 0) // spawn_wave animation
 			{
-				gameActivity.shockWaves.add(new ShockWave(position, ShockWave.SMALL_WAVE));
+				gameActivity.shockWaves.add(new ShockWave(position, ShockWaveType.SMALL_WAVE));
 				spawnWave--;
 			}
 
@@ -156,7 +156,7 @@ final class Ball implements Runnable
 			else // balls trailer effects
 			{
 				gameActivity.trails.add(new Trail(previousPosition, position));
-				gameActivity.shockWaves.add(new ShockWave(position, ShockWave.EXTRA_SMALL_WAVE));
+				gameActivity.shockWaves.add(new ShockWave(position, ShockWaveType.EXTRA_SMALL_WAVE));
 			}
 
 			try
