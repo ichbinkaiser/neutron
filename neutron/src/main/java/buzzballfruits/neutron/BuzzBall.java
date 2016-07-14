@@ -50,6 +50,7 @@ final public class BuzzBall implements Runnable
 	{
 		Thread thread = new Thread(this);
 		thread.setName("BuzzBall");
+		thread.setDaemon(true);
 		thread.start();
 	}
 

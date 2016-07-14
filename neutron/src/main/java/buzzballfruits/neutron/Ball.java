@@ -52,6 +52,7 @@ final class Ball implements Runnable
 	{
 		Thread thread = new Thread(this);
 		thread.setName("Ball");
+		thread.setDaemon(true);
 		thread.start();
 	}
 

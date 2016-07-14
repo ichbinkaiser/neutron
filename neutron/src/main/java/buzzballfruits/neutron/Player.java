@@ -38,6 +38,7 @@ final class Player implements Runnable
 	{
 		Thread thread = new Thread(this);
 		thread.setName("Player");
+		thread.setDaemon(true);
 		thread.start();
 	}
 

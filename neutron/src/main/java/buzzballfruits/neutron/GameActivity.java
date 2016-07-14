@@ -151,6 +151,7 @@ public class GameActivity extends Activity implements SensorEventListener
 		{
 			Thread thread = new Thread(this);
 			thread.setName("GlobalThread");
+			thread.setDaemon(true);
 			thread.start();
 		}
 

@@ -20,8 +20,8 @@ final class ResourceManager
 	int soundsLoaded = 0;
 	int bitmapsLoaded = 0;
 
-	int[] drawableLibrary = new int[]{R.drawable.buzzball1, R.drawable.buzzball2, R.drawable.buzzball3, R.drawable.buzzball4, R.drawable.buzzball5, R.drawable.buzzball6};
-	int[] soundLibrary = new int[]{R.raw.pop, R.raw.lifeup, R.raw.ding, R.raw.popwall, R.raw.down, R.raw.hit, R.raw.restart, R.raw.spawn};
+	int[] drawableLibrary = {R.drawable.buzzball1, R.drawable.buzzball2, R.drawable.buzzball3, R.drawable.buzzball4, R.drawable.buzzball5, R.drawable.buzzball6};
+	int[] soundLibrary = {R.raw.pop, R.raw.lifeup, R.raw.ding, R.raw.popwall, R.raw.down, R.raw.hit, R.raw.restart, R.raw.spawn};
 
 	RollingObjectBitmap[] buzzBallBitmaps = new RollingObjectBitmap[drawableLibrary.length]; //buzz balls bitmap
 
