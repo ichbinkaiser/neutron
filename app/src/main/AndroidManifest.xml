@@ -8,7 +8,7 @@
         android:icon="@drawable/smiley"
         android:label="@string/app_name" >
         <activity
-                android:name="buzzballfruits.neutron.SplashActivity"
+                android:name="ichbinkaiser.neutron.SplashActivity"
                 android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -16,13 +16,13 @@
             </intent-filter>
         </activity>
         <activity
-                android:name="buzzballfruits.neutron.MainActivity">
+                android:name="ichbinkaiser.neutron.MainActivity">
         </activity>
         <activity
-                android:name="buzzballfruits.neutron.ScoreActivity">
+                android:name="ichbinkaiser.neutron.ScoreActivity">
         </activity>
         <activity
-                android:name="buzzballfruits.neutron.GameActivity">
+                android:name="ichbinkaiser.neutron.GameActivity">
         </activity>
 
     </application>

@@ -1,4 +1,4 @@
-package buzzballfruits.neutron;
+package ichbinkaiser.neutron;
 
 import android.content.Context;
 import android.graphics.Bitmap;

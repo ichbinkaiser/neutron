@@ -1,4 +1,4 @@
-package buzzballfruits.neutron;
+package ichbinkaiser.neutron;
 
 import android.graphics.Point;
 
