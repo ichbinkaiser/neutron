@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="buzzballfruits.neutron">
+    package="ichbinkaiser.neutron">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -8,21 +8,18 @@
         android:icon="@drawable/smiley"
         android:label="@string/app_name" >
         <activity
-                android:name="ichbinkaiser.neutron.SplashActivity"
+            android:name="ichbinkaiser.neutron.activity.SplashActivity"
                 android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-                android:name="ichbinkaiser.neutron.MainActivity">
+        <activity android:name="ichbinkaiser.neutron.activity.MainActivity">
         </activity>
-        <activity
-                android:name="ichbinkaiser.neutron.ScoreActivity">
+        <activity android:name="ichbinkaiser.neutron.activity.ScoreActivity">
         </activity>
-        <activity
-                android:name="ichbinkaiser.neutron.GameActivity">
+        <activity android:name="ichbinkaiser.neutron.activity.GameActivity">
         </activity>
 
     </application>
