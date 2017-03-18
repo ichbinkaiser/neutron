@@ -52,6 +52,7 @@ public class SplashActivity extends Activity {
             thread.start();
         }
 
+        @Override
         public void run() {
             GameActivity.resourceManager.loadSounds();
             while (!(GameActivity.resourceManager.getSoundsLoaded() == GameActivity.resourceManager.getSoundLibrary().length)) {

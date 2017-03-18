@@ -15,7 +15,7 @@ import ichbinkaiser.neutron.entity.RollingObjectBitmap;
 import ichbinkaiser.neutron.entity.Sound;
 
 public class ResourceManager {
-    private static ResourceManager SINGLETON_INSTANCE = new ResourceManager();
+    private static ResourceManager instance = new ResourceManager();
     boolean loaded = false;
     SoundPool soundpool;
     SparseIntArray sounds;
@@ -51,7 +51,7 @@ public class ResourceManager {
     }
 
     public static ResourceManager getInstance() {
-        return SINGLETON_INSTANCE;
+        return instance;
     }
 
     public RollingObjectBitmap[] getBuzzBallBitmaps() {

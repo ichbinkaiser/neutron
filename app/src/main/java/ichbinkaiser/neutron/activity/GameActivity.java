@@ -145,12 +145,14 @@ public class GameActivity extends Activity implements SensorEventListener {
         this.wakelock.release();
     }
 
+    @Override
     public void onPause() {
         super.onPause();
         finish(); // disallow pausing
         sensorManager.unregisterListener(this);
     }
 
+    @Override
     public void onResume() {
         super.onResume();
         sensorManager.registerListener(this, orientation, SensorManager.SENSOR_DELAY_FASTEST);
@@ -181,10 +183,12 @@ public class GameActivity extends Activity implements SensorEventListener {
                 players));
     }
 
+    @Override
     public void onAccuracyChanged(Sensor sensor, int integer) {
         Log.i(getLocalClassName(), "Accuracy changed");
     }
 
+    @Override
     public void onSensorChanged(SensorEvent event) {
         rollAngle = event.values[2];
         players[0].setDestination(rollAngle);
@@ -266,6 +270,7 @@ public class GameActivity extends Activity implements SensorEventListener {
             thread.start();
         }
 
+        @Override
         public void run() {
             while (isRunning) {
                 if (balls.size() < ballCount) {
@@ -418,20 +423,24 @@ public class GameActivity extends Activity implements SensorEventListener {
             globalthread = new GlobalThread();
         }
 
+        @Override
         public void surfaceDestroyed(SurfaceHolder holder) { // when user leaves game
             isRunning = false;
             Log.i(getLocalClassName(), "Surface destroyed");
         }
 
+        @Override
         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
             Log.i(getLocalClassName(), "Surface changed");
         }
 
+        @Override
         public void surfaceCreated(SurfaceHolder holder) { // when user enters game
             gameSurfaceThread = new GameSurfaceThread(GameActivity.this, holder, this);
             Log.i(getLocalClassName(), "Surface created");
         }
 
+        @Override
         public boolean onTouchEvent(MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 players[0].jump();

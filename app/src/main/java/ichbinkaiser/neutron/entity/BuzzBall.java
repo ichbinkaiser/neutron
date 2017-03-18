@@ -114,11 +114,11 @@ public class BuzzBall implements Runnable {
 
                     if (!collided && !dying) {
 
-                        if (ball.goingLeft) {
-                            ball.goingLeft = false;
+                        if (ball.isGoingLeft) {
+                            ball.isGoingLeft = false;
                             xMovement = 2;
                         } else {
-                            ball.goingLeft = true;
+                            ball.isGoingLeft = true;
                             xMovement = -2;
                         }
                         ballsCollided.add(ball);

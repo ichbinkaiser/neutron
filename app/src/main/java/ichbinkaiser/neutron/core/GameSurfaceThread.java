@@ -20,6 +20,7 @@ public class GameSurfaceThread extends Thread {
         start();
     }
 
+    @Override
     public void run() {
         Canvas canvas = null;
         while (gameActivity.isRunning()) {

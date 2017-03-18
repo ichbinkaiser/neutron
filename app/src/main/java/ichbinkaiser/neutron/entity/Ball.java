@@ -17,17 +17,17 @@ public class Ball implements Runnable {
     float climb; // upward force
     float gravity; // downward force
 
-    boolean dead = false; // balls is removed from balls list
+    boolean isDead = false; // balls is removed from balls list
 
     Point position = new Point();
     Point previousPosition = new Point(); // previous position
 
     Random rnd = new Random();
     int sidewaysSpeed = rnd.nextInt(5);
-    boolean goingLeft; // is left balls direction
+    boolean isGoingLeft; // is left balls direction
     boolean collide; // has collided
     int spawnWave = 0;
-    boolean isTargetable = true;
+    boolean canBeTargeted = true;
 
     public Ball(GameActivity gameActivity, List<Ball> balls, Player[] players) {
         this.gameActivity = gameActivity;
@@ -40,7 +40,7 @@ public class Ball implements Runnable {
         gravity = 0;
 
         int number = rnd.nextInt(3);
-        goingLeft = number > 1;
+        isGoingLeft = number > 1;
         start();
     }
 
@@ -59,8 +59,9 @@ public class Ball implements Runnable {
         thread.start();
     }
 
+    @Override
     public void run() {
-        while (gameActivity.isRunning() && !dead) {
+        while (gameActivity.isRunning() && !isDead) {
             ///////////////////////////// BALL TO PLAYER COLLISION DETECTION //////////////////////////
             for (Player currentPlayer : players) {
                 if (position.y >= currentPlayer.getPosition().y
@@ -73,7 +74,7 @@ public class Ball implements Runnable {
                     gravity = 0.0f;
 
                     gameActivity.getShockWaves().add(new ShockWave(position, ShockWaveType.EXTRA_SMALL_WAVE));
-                    goingLeft = currentPlayer.isRight();
+                    isGoingLeft = currentPlayer.isRight();
 
                     if (currentPlayer == players[0]) // if human players
                     {
@@ -94,8 +95,8 @@ public class Ball implements Runnable {
                     if (checkCollision(currentBall.position)) // balls collision detected
                     {
                         GameActivity.getResourceManager().playSound(Sound.RESTART, 1);
-                        goingLeft = !goingLeft && !currentBall.goingLeft; // go right if bumped balls is going left
-                        currentBall.goingLeft = !goingLeft; // reverse direction of the bumped balls
+                        isGoingLeft = !isGoingLeft && !currentBall.isGoingLeft; // go right if bumped balls is going left
+                        currentBall.isGoingLeft = !isGoingLeft; // reverse direction of the bumped balls
                         sidewaysSpeed = rnd.nextInt(5);
                         currentBall.collide = true;
                     }
@@ -109,7 +110,7 @@ public class Ball implements Runnable {
             position.y += climb + gravity * gravity;
             gravity += 0.05f;
 
-            if (goingLeft) {
+            if (isGoingLeft) {
                 position.x += sidewaysSpeed;
             } else {
                 position.x -= sidewaysSpeed; // balls horizontal movement
@@ -123,13 +124,13 @@ public class Ball implements Runnable {
 
             if (position.x < 0) // balls has reached left wall
             {
-                goingLeft = true;
+                isGoingLeft = true;
                 GameActivity.getResourceManager().playSound(Sound.POP_WALL, 1);
             }
 
             if (position.x > gameActivity.getCanvasWidth()) // balls has reached right wall
             {
-                goingLeft = false;
+                isGoingLeft = false;
                 GameActivity.getResourceManager().playSound(Sound.POP_WALL, 1);
             }
 
@@ -146,7 +147,7 @@ public class Ball implements Runnable {
                     interruptedException.printStackTrace();
                     Log.e("Ball", interruptedException.toString());
                 }
-                dead = true;
+                isDead = true;
                 GameActivity.getResourceManager().playSound(Sound.DOWN, 1);
             } else // balls trailer effects
             {
@@ -168,18 +169,18 @@ public class Ball implements Runnable {
     }
 
     public boolean isDead() {
-        return dead;
+        return isDead;
     }
 
     public Point getPosition() {
         return position;
     }
 
-    public boolean isTargetable() {
-        return isTargetable;
+    public boolean canBeTargeted() {
+        return canBeTargeted;
     }
 
-    public void setTargetable(boolean targetable) {
-        this.isTargetable = targetable;
+    public void setCanBeTargeted(boolean canBeTargeted) {
+        this.canBeTargeted = canBeTargeted;
     }
 }

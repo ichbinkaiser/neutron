@@ -29,6 +29,7 @@ public class AI implements Runnable {
         thread.start();
     }
 
+    @Override
     public void run() {
         target.x = gameActivity.getCanvasWidth() / 2;
 
@@ -37,10 +38,10 @@ public class AI implements Runnable {
         {
             target.y = 0;
             for (Ball currentBall : ball) {
-                currentBall.setTargetable(currentBall.getPosition().x <= playerPosition.x
+                currentBall.setCanBeTargeted(currentBall.getPosition().x <= playerPosition.x
                         && currentBall.getPosition().x <= playerPosition.x + gameActivity.getSmileyWidth()); // if not true balls is a valid AI target
 
-                if (!currentBall.isDead() && currentBall.isNotGoingUp() && currentBall.isTargetable() && currentBall.getPosition().y > target.y) {
+                if (!currentBall.isDead() && currentBall.isNotGoingUp() && currentBall.canBeTargeted() && currentBall.getPosition().y > target.y) {
                     target.set(currentBall.getPosition().x - gameActivity.getSmileyWidth() / 2, currentBall.getPosition().y - gameActivity.getSmileyHeight() / 2); // check for priority target
                 }
             }

@@ -41,6 +41,7 @@ public class Player implements Runnable {
         thread.start();
     }
 
+    @Override
     public void run() {
         int edge = gameActivity.getCanvasWidth() - gameActivity.getSmileyWidth();
         shadowT = ground + gameActivity.getSmileyHeight() - gameActivity.getSmileyHeight() / 4;
