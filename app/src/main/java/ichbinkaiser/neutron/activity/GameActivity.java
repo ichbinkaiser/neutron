@@ -451,8 +451,7 @@ public class GameActivity extends Activity implements SensorEventListener {
 
         public void screenDraw(Canvas canvas) {
             canvas.drawBitmap(back, 0, 0, null);
-            for (Player player : players) // draw playerCount
-            {
+            for (Player player : players) { // draw playerCount
                 shadowPaint.setAlpha(player.getShadowOpacity());
                 canvas.drawOval(player.getShadow(), shadowPaint);
                 if (player == players[0]) {
@@ -479,8 +478,7 @@ public class GameActivity extends Activity implements SensorEventListener {
                 }
             }
 
-            for (int index = 0; index < balls.size(); index++) // balls drawer
-            {
+            for (int index = 0; index < balls.size(); index++) { // balls drawer
                 Ball ball = balls.get(index);
                 if (ball.isDead()) {
                     balls.remove(index);
@@ -492,8 +490,7 @@ public class GameActivity extends Activity implements SensorEventListener {
                 }
             }
 
-            for (int index = 0; index < trails.size(); index++) // trails drawer
-            {
+            for (int index = 0; index < trails.size(); index++) { // trails drawer
                 Trail trail = trails.get(index);
                 if (trail.getLife() > 0) {
                     ballTrail.setStrokeWidth(ballSize - trail.calcSize());
@@ -509,8 +506,7 @@ public class GameActivity extends Activity implements SensorEventListener {
                 }
             }
 
-            for (int index = 0; index < shockWaves.size(); index++)  // shockWaves drawer
-            {
+            for (int index = 0; index < shockWaves.size(); index++) { // shockWaves drawer
                 ShockWave shockWave = shockWaves.get(index);
                 if (shockWave.getLife() > 0) // bump animation
                 {
@@ -553,8 +549,7 @@ public class GameActivity extends Activity implements SensorEventListener {
                 }
             }
 
-            for (int index = 0; index < popups.size(); index++) // popups text drawer
-            {
+            for (int index = 0; index < popups.size(); index++) { // popups text drawer
                 if (popups.get(index).getLife() > 0) // if popups text is to be shown
                 {
                     popupText.setColor(Color.argb(popups.get(index).getLife(), 255, 255, 255)); // text fade effect
@@ -584,8 +579,7 @@ public class GameActivity extends Activity implements SensorEventListener {
                 }
             }
 
-            for (int index = 0; index < buzzBalls.size(); index++) // draw buzzBalls
-            {
+            for (int index = 0; index < buzzBalls.size(); index++) { // draw buzzBalls
                 BuzzBall buzzBall = buzzBalls.get(index);
                 buzzBallPaint.setAlpha(buzzBalls.get(index).getOpacity());
 
