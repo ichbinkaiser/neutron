@@ -45,25 +45,39 @@ import ichbinkaiser.neutron.entity.RollingObjectBitmap;
 import ichbinkaiser.neutron.entity.ShockWave;
 import ichbinkaiser.neutron.entity.Sound;
 import ichbinkaiser.neutron.entity.Trail;
+import lombok.Getter;
 
 public class GameActivity extends Activity implements SensorEventListener {
     static String score;
     static ResourceManager resourceManager = ResourceManager.getInstance(); // global resource manager
+
+    @Getter
     int canvasHeight, canvasWidth;
     int midpoint; // canvas horizontal midpoint
     int life = 50;
     int gameScore = 0;
     int ballCount = 5;
+
+    @Getter
     boolean isRunning = true; // game isRunning
     boolean gameOver = false;
+
+    @Getter
     int ballSize;
     boolean soloGame = true;
     int playerCount;
+    @Getter
     int smileyWidth, smileyHeight; // smiley object dimensions
+
+    @Getter
     float rollAngle = 0;
 
+    @Getter
     List<Popup> popups = new CopyOnWriteArrayList<>(); // popups messages array list
+
+    @Getter
     List<ShockWave> shockWaves = new CopyOnWriteArrayList<>(); // shockWaves animation list
+    @Getter
     List<Trail> trails = new CopyOnWriteArrayList<>(); // trails animation list
     List<BuzzBall> buzzBalls = new CopyOnWriteArrayList<>(); // buzzBalls fruit array list
     List<Ball> balls = new CopyOnWriteArrayList<>(); // white ball array list
@@ -75,6 +89,7 @@ public class GameActivity extends Activity implements SensorEventListener {
     Sensor orientation;
     Random rnd = new Random();
 
+    @Getter
     String[] yeyStrings = new String[]{
             "OH YEAH!",
             "WOHOOO!",
@@ -86,6 +101,8 @@ public class GameActivity extends Activity implements SensorEventListener {
             "YEAH!!",
             "WAY TO GO!",
             "YOU ROCK!"};
+
+    @Getter
     String[] booStrings = new String[]{
             "YOU SUCK!",
             "LOSER!",
@@ -98,9 +115,11 @@ public class GameActivity extends Activity implements SensorEventListener {
             "DIE!",
             "BOOM!"};
 
+    @Getter
     Player[] players; // set Players array
     AI ai; // set AI
 
+    @Getter
     int[] ground = new int[2]; // playerCount ground level array
 
     static public ResourceManager getResourceManager() {
@@ -192,62 +211,6 @@ public class GameActivity extends Activity implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         rollAngle = event.values[2];
         players[0].setDestination(rollAngle);
-    }
-
-    public int getCanvasHeight() {
-        return canvasHeight;
-    }
-
-    public int getCanvasWidth() {
-        return canvasWidth;
-    }
-
-    public boolean isRunning() {
-        return isRunning;
-    }
-
-    public int getBallSize() {
-        return ballSize;
-    }
-
-    public int getSmileyWidth() {
-        return smileyWidth;
-    }
-
-    public int getSmileyHeight() {
-        return smileyHeight;
-    }
-
-    public float getRollAngle() {
-        return rollAngle;
-    }
-
-    public List<Popup> getPopups() {
-        return popups;
-    }
-
-    public List<ShockWave> getShockWaves() {
-        return shockWaves;
-    }
-
-    public List<Trail> getTrails() {
-        return trails;
-    }
-
-    public String[] getYeyStrings() {
-        return yeyStrings;
-    }
-
-    public String[] getBooStrings() {
-        return booStrings;
-    }
-
-    public Player[] getPlayers() {
-        return players;
-    }
-
-    public int[] getGround() {
-        return ground;
     }
 
     public void addGameScore(int addend) {
