@@ -49,10 +49,6 @@ import lombok.Getter;
 
 public class GameActivity extends Activity implements SensorEventListener {
 
-    @Getter
-    private static String score;
-    @Getter
-    private static ResourceManager resourceManager = ResourceManager.getInstance(); // global resource manager
     private int midpoint; // canvas horizontal midpoint
     private int life = 50;
     private int gameScore = 0;
@@ -60,6 +56,7 @@ public class GameActivity extends Activity implements SensorEventListener {
     private boolean gameOver = false;
     private boolean soloGame = true;
     private int playerCount;
+
     private RollingObjectBitmap[] buzzBallBitmaps = resourceManager.getBuzzBallBitmaps(); //buzz balls bitmap
     private PowerManager.WakeLock wakelock;
     private GameSurfaceThread gameSurfaceThread;
@@ -69,24 +66,46 @@ public class GameActivity extends Activity implements SensorEventListener {
     private Random rnd = new Random();
     private List<BuzzBall> buzzBalls = new CopyOnWriteArrayList<>(); // buzzBalls fruit array list
     private List<Ball> balls = new CopyOnWriteArrayList<>(); // white ball array list
+
+    @Getter
+    private static String score;
+
+    @Getter
+    private static ResourceManager resourceManager = ResourceManager.getInstance(); // global resource manager
+
     @Getter
     private int canvasHeight, canvasWidth;
+
     @Getter
     private boolean isRunning = true; // game isRunning
+
     @Getter
     private int ballSize;
+
     @Getter
     private int smileyWidth, smileyHeight; // smiley object dimensions
+
     @Getter
     private float rollAngle = 0;
+
     @Getter
     private int[] ground = new int[2]; // playerCount ground level array
+
     @Getter
     private List<Popup> popups = new CopyOnWriteArrayList<>(); // popups messages array list
+
     @Getter
     private List<ShockWave> shockWaves = new CopyOnWriteArrayList<>(); // shockWaves animation list
+
     @Getter
     private List<Trail> trails = new CopyOnWriteArrayList<>(); // trails animation list
+
+    @Getter
+    private Player[] players; // set Players array
+
+    @Getter
+    private AI ai; // set AI
+
     @Getter
     private String[] yeyStrings = new String[]{
             "OH YEAH!",
@@ -98,7 +117,9 @@ public class GameActivity extends Activity implements SensorEventListener {
             "GREAT!",
             "YEAH!!",
             "WAY TO GO!",
-            "YOU ROCK!"};
+            "YOU ROCK!"
+    };
+
     @Getter
     private String[] booStrings = new String[]{
             "YOU SUCK!",
@@ -110,11 +131,8 @@ public class GameActivity extends Activity implements SensorEventListener {
             "HAHAHA!",
             "YOU MAD?!",
             "DIE!",
-            "BOOM!"};
-    @Getter
-    private Player[] players; // set Players array
-    @Getter
-    private AI ai; // set AI
+            "BOOM!"
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
