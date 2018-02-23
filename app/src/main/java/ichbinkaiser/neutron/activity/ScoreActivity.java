@@ -20,6 +20,6 @@ public class ScoreActivity extends Activity {
         setContentView(R.layout.activity_score);
         Intent score = getIntent(); // retrieve score from game activity
         TextView text = findViewById(R.id.textView1);
-        text.setText("Your score is " + score.getStringExtra(GameActivity.score));
+        text.setText("Your score is " + score.getStringExtra(GameActivity.getScore()));
     }
 }

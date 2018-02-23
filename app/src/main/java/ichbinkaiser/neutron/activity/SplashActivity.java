@@ -21,7 +21,7 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.activity_splash);
 
         if (!GameActivity.getResourceManager().isLoaded()) {
-            GameActivity.resourceManager.initSounds(this);
+            GameActivity.getResourceManager().initSounds(this);
             loader.start();
         } else {
             showMain(); // done loading show go to main
@@ -54,13 +54,13 @@ public class SplashActivity extends Activity {
 
         @Override
         public void run() {
-            GameActivity.resourceManager.loadSounds();
-            while (!(GameActivity.resourceManager.getSoundsLoaded() == GameActivity.resourceManager.getSoundLibrary().length)) {
+            GameActivity.getResourceManager().loadSounds();
+            while (!(GameActivity.getResourceManager().getSoundsLoaded() == GameActivity.getResourceManager().getSoundLibrary().length)) {
                 pause(1000);
             }
 
-            GameActivity.resourceManager.loadBitmaps();
-            while (!(GameActivity.resourceManager.getBitmapsLoaded() == GameActivity.resourceManager.getBitmapsSize())) {
+            GameActivity.getResourceManager().loadBitmaps();
+            while (!(GameActivity.getResourceManager().getBitmapsLoaded() == GameActivity.getResourceManager().getBitmapsSize())) {
                 pause(1500);
             }
 

@@ -48,49 +48,47 @@ import ichbinkaiser.neutron.entity.Trail;
 import lombok.Getter;
 
 public class GameActivity extends Activity implements SensorEventListener {
-    static String score;
-    static ResourceManager resourceManager = ResourceManager.getInstance(); // global resource manager
 
     @Getter
-    int canvasHeight, canvasWidth;
-    int midpoint; // canvas horizontal midpoint
-    int life = 50;
-    int gameScore = 0;
-    int ballCount = 5;
-
+    private static String score;
     @Getter
-    boolean isRunning = true; // game isRunning
-    boolean gameOver = false;
-
+    private static ResourceManager resourceManager = ResourceManager.getInstance(); // global resource manager
+    private int midpoint; // canvas horizontal midpoint
+    private int life = 50;
+    private int gameScore = 0;
+    private int ballCount = 5;
+    private boolean gameOver = false;
+    private boolean soloGame = true;
+    private int playerCount;
+    private RollingObjectBitmap[] buzzBallBitmaps = resourceManager.getBuzzBallBitmaps(); //buzz balls bitmap
+    private PowerManager.WakeLock wakelock;
+    private GameSurfaceThread gameSurfaceThread;
+    private SurfaceHolder surfaceHolder;
+    private SensorManager sensorManager;
+    private Sensor orientation;
+    private Random rnd = new Random();
+    private List<BuzzBall> buzzBalls = new CopyOnWriteArrayList<>(); // buzzBalls fruit array list
+    private List<Ball> balls = new CopyOnWriteArrayList<>(); // white ball array list
     @Getter
-    int ballSize;
-    boolean soloGame = true;
-    int playerCount;
+    private int canvasHeight, canvasWidth;
     @Getter
-    int smileyWidth, smileyHeight; // smiley object dimensions
-
+    private boolean isRunning = true; // game isRunning
     @Getter
-    float rollAngle = 0;
-
+    private int ballSize;
     @Getter
-    List<Popup> popups = new CopyOnWriteArrayList<>(); // popups messages array list
-
+    private int smileyWidth, smileyHeight; // smiley object dimensions
     @Getter
-    List<ShockWave> shockWaves = new CopyOnWriteArrayList<>(); // shockWaves animation list
+    private float rollAngle = 0;
     @Getter
-    List<Trail> trails = new CopyOnWriteArrayList<>(); // trails animation list
-    List<BuzzBall> buzzBalls = new CopyOnWriteArrayList<>(); // buzzBalls fruit array list
-    List<Ball> balls = new CopyOnWriteArrayList<>(); // white ball array list
-    RollingObjectBitmap[] buzzBallBitmaps = resourceManager.getBuzzBallBitmaps(); //buzz balls bitmap
-    PowerManager.WakeLock wakelock;
-    GameSurfaceThread gameSurfaceThread;
-    SurfaceHolder surfaceHolder;
-    SensorManager sensorManager;
-    Sensor orientation;
-    Random rnd = new Random();
-
+    private int[] ground = new int[2]; // playerCount ground level array
     @Getter
-    String[] yeyStrings = new String[]{
+    private List<Popup> popups = new CopyOnWriteArrayList<>(); // popups messages array list
+    @Getter
+    private List<ShockWave> shockWaves = new CopyOnWriteArrayList<>(); // shockWaves animation list
+    @Getter
+    private List<Trail> trails = new CopyOnWriteArrayList<>(); // trails animation list
+    @Getter
+    private String[] yeyStrings = new String[]{
             "OH YEAH!",
             "WOHOOO!",
             "YEAH BABY!",
@@ -101,9 +99,8 @@ public class GameActivity extends Activity implements SensorEventListener {
             "YEAH!!",
             "WAY TO GO!",
             "YOU ROCK!"};
-
     @Getter
-    String[] booStrings = new String[]{
+    private String[] booStrings = new String[]{
             "YOU SUCK!",
             "LOSER!",
             "GO HOME!",
@@ -114,17 +111,10 @@ public class GameActivity extends Activity implements SensorEventListener {
             "YOU MAD?!",
             "DIE!",
             "BOOM!"};
-
     @Getter
-    Player[] players; // set Players array
-    AI ai; // set AI
-
+    private Player[] players; // set Players array
     @Getter
-    int[] ground = new int[2]; // playerCount ground level array
-
-    static public ResourceManager getResourceManager() {
-        return resourceManager;
-    }
+    private AI ai; // set AI
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
