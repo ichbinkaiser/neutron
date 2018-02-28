@@ -57,7 +57,7 @@ public class GameActivity extends Activity implements SensorEventListener {
     private boolean soloGame = true;
     private int playerCount;
 
-    private RollingObjectBitmap[] buzzBallBitmaps = resourceManager.getBuzzBallBitmaps(); //buzz balls bitmap
+    private RollingObjectBitmap[] buzzBallBitmaps; //buzz balls bitmap
     private PowerManager.WakeLock wakelock;
     private GameSurfaceThread gameSurfaceThread;
     private SurfaceHolder surfaceHolder;
@@ -71,7 +71,7 @@ public class GameActivity extends Activity implements SensorEventListener {
     private static String score;
 
     @Getter
-    private static ResourceManager resourceManager = ResourceManager.getInstance(); // global resource manager
+    private ResourceManager resourceManager = ResourceManager.getInstance(); // global resource manager
 
     @Getter
     private int canvasHeight, canvasWidth;
@@ -137,13 +137,14 @@ public class GameActivity extends Activity implements SensorEventListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        buzzBallBitmaps = resourceManager.getBuzzBallBitmaps();
         Log.i(getLocalClassName(), "Activity started");
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        this.wakelock = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK, "My Tag");
+        this.wakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "My Tag");
         this.wakelock.acquire();
 
         if (getIntent().getIntExtra("BALLS_COUNT", -1) > 0) {
@@ -161,7 +162,7 @@ public class GameActivity extends Activity implements SensorEventListener {
         setContentView(lLayout);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        orientation = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        orientation = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         sensorManager.registerListener(this, orientation, SensorManager.SENSOR_DELAY_GAME);
     }
 
