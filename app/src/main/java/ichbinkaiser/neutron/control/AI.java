@@ -38,10 +38,10 @@ public class AI implements Runnable {
         {
             target.y = 0;
             for (Ball currentBall : ball) {
-                currentBall.setCanBeTargeted(currentBall.getPosition().x <= playerPosition.x
+                currentBall.setValidTarget(currentBall.getPosition().x <= playerPosition.x
                         && currentBall.getPosition().x <= playerPosition.x + gameActivity.getSmileyWidth()); // if not true balls is a valid AI target
 
-                if (!currentBall.isDead() && currentBall.isNotGoingUp() && currentBall.canBeTargeted() && currentBall.getPosition().y > target.y) {
+                if (!currentBall.isDead() && currentBall.isNotGoingUp() && currentBall.isValidTarget() && currentBall.getPosition().y > target.y) {
                     target.set(currentBall.getPosition().x - gameActivity.getSmileyWidth() / 2, currentBall.getPosition().y - gameActivity.getSmileyHeight() / 2); // check for priority target
                 }
             }

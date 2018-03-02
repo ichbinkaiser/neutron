@@ -8,32 +8,45 @@ import java.util.Random;
 
 import ichbinkaiser.neutron.activity.GameActivity;
 import ichbinkaiser.neutron.control.Player;
+import ichbinkaiser.neutron.core.ResourceManager;
+import lombok.Getter;
+import lombok.Setter;
 
 public class Ball implements Runnable {
-    GameActivity gameActivity;
-    List<Ball> balls; // balls pointer
-    Player[] players; // playerCount pointer
 
-    float climb; // upward force
-    float gravity; // downward force
+    private float climb; // upward force
+    private float gravity; // downward force
+    private int sidewaysSpeed;
+    private boolean collide; // has collided
+    private int spawnWave = 0;
 
-    boolean isDead = false; // balls is removed from balls list
+    private GameActivity gameActivity;
+    private List<Ball> balls; // balls pointer
+    private Player[] players; // playerCount pointer
+    private ResourceManager resourceManager = ResourceManager.getInstance();
+    private Point previousPosition = new Point(); // previous position
+    private Random rnd = new Random();
 
-    Point position = new Point();
-    Point previousPosition = new Point(); // previous position
+    @Getter
+    @Setter
+    private boolean validTarget = true;
 
-    Random rnd = new Random();
-    int sidewaysSpeed = rnd.nextInt(5);
-    boolean isGoingLeft; // is left balls direction
-    boolean collide; // has collided
-    int spawnWave = 0;
-    boolean canBeTargeted = true;
+    @Getter
+    @Setter
+    private boolean isGoingLeft; // is left balls direction
+
+    @Getter
+    private boolean isDead = false; // balls is removed from balls list
+
+    @Getter
+    private Point position = new Point();
 
     public Ball(GameActivity gameActivity, List<Ball> balls, Player[] players) {
         this.gameActivity = gameActivity;
         this.balls = balls;
         this.players = players;
 
+        sidewaysSpeed = rnd.nextInt(5);
         position.x = rnd.nextInt(gameActivity.getCanvasWidth());
         position.y = gameActivity.getCanvasHeight();
         climb = -(float) (rnd.nextInt(3) + 12); // upward force
@@ -82,7 +95,7 @@ public class Ball implements Runnable {
                         gameActivity.doShake(40);
                     }
 
-                    GameActivity.getResourceManager().playSound(Sound.POP, 1);
+                    resourceManager.playSound(Sound.POP, 1);
 
                     sidewaysSpeed = rnd.nextInt(5);
                     gameActivity.getPopups().add(new Popup(position, PopupType.BUMP, gameActivity.getYeyStrings().length)); // popups text in score++
@@ -94,7 +107,7 @@ public class Ball implements Runnable {
                 {
                     if (checkCollision(currentBall.position)) // balls collision detected
                     {
-                        GameActivity.getResourceManager().playSound(Sound.RESTART, 1);
+                        resourceManager.playSound(Sound.RESTART, 1);
                         isGoingLeft = !isGoingLeft && !currentBall.isGoingLeft; // go right if bumped balls is going left
                         currentBall.isGoingLeft = !isGoingLeft; // reverse direction of the bumped balls
                         sidewaysSpeed = rnd.nextInt(5);
@@ -125,20 +138,20 @@ public class Ball implements Runnable {
             if (position.x < 0) // balls has reached left wall
             {
                 isGoingLeft = true;
-                GameActivity.getResourceManager().playSound(Sound.POP_WALL, 1);
+                resourceManager.playSound(Sound.POP_WALL, 1);
             }
 
             if (position.x > gameActivity.getCanvasWidth()) // balls has reached right wall
             {
                 isGoingLeft = false;
-                GameActivity.getResourceManager().playSound(Sound.POP_WALL, 1);
+                resourceManager.playSound(Sound.POP_WALL, 1);
             }
 
             if (position.y > gameActivity.getCanvasHeight()) // balls has fallen off screen
             {
                 gameActivity.decrementLife();
                 gameActivity.getPopups().add(new Popup(position, PopupType.YEY, gameActivity.getBooStrings().length));
-                GameActivity.getResourceManager().playSound(Sound.DOWN, 1);
+                resourceManager.playSound(Sound.DOWN, 1);
                 gameActivity.doShake(100);
 
                 try {
@@ -148,7 +161,7 @@ public class Ball implements Runnable {
                     Log.e("Ball", interruptedException.toString());
                 }
                 isDead = true;
-                GameActivity.getResourceManager().playSound(Sound.DOWN, 1);
+                resourceManager.playSound(Sound.DOWN, 1);
             } else // balls trailer effects
             {
                 gameActivity.getTrails().add(new Trail(previousPosition, position));
@@ -166,21 +179,5 @@ public class Ball implements Runnable {
 
     public boolean isNotGoingUp() {
         return (previousPosition.y <= position.y);
-    }
-
-    public boolean isDead() {
-        return isDead;
-    }
-
-    public Point getPosition() {
-        return position;
-    }
-
-    public boolean canBeTargeted() {
-        return canBeTargeted;
-    }
-
-    public void setCanBeTargeted(boolean canBeTargeted) {
-        this.canBeTargeted = canBeTargeted;
     }
 }

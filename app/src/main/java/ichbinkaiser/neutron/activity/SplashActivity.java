@@ -8,9 +8,12 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import ichbinkaiser.neutron.R;
+import ichbinkaiser.neutron.core.ResourceManager;
 
 public class SplashActivity extends Activity {
     private Loader loader = new Loader();
+
+    private ResourceManager resourceManager = ResourceManager.getInstance();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -20,8 +23,8 @@ public class SplashActivity extends Activity {
 
         setContentView(R.layout.activity_splash);
 
-        if (!GameActivity.getResourceManager().isLoaded()) {
-            GameActivity.getResourceManager().initSounds(this);
+        if (!resourceManager.isLoaded()) {
+            resourceManager.initSounds(this);
             loader.start();
         } else {
             showMain(); // done loading show go to main
@@ -54,17 +57,17 @@ public class SplashActivity extends Activity {
 
         @Override
         public void run() {
-            GameActivity.getResourceManager().loadSounds();
-            while (!(GameActivity.getResourceManager().getSoundsLoaded() == GameActivity.getResourceManager().getSoundLibrary().length)) {
+            resourceManager.loadSounds();
+            while (!(resourceManager.getSoundsLoaded() == resourceManager.getSoundLibrary().length)) {
                 pause(1000);
             }
 
-            GameActivity.getResourceManager().loadBitmaps();
-            while (!(GameActivity.getResourceManager().getBitmapsLoaded() == GameActivity.getResourceManager().getBitmapsSize())) {
+            resourceManager.loadBitmaps();
+            while (!(resourceManager.getBitmapsLoaded() == resourceManager.getBitmapsSize())) {
                 pause(1500);
             }
 
-            GameActivity.getResourceManager().setLoaded(true);
+            resourceManager.setLoaded(true);
             showMain(); // done loading show go to main
         }
     }

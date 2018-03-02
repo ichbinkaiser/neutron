@@ -66,12 +66,10 @@ public class GameActivity extends Activity implements SensorEventListener {
     private Random rnd = new Random();
     private List<BuzzBall> buzzBalls = new CopyOnWriteArrayList<>(); // buzzBalls fruit array list
     private List<Ball> balls = new CopyOnWriteArrayList<>(); // white ball array list
+    private ResourceManager resourceManager = ResourceManager.getInstance(); // global resource manager
 
     @Getter
     private static String score;
-
-    @Getter
-    private ResourceManager resourceManager = ResourceManager.getInstance(); // global resource manager
 
     @Getter
     private int canvasHeight, canvasWidth;

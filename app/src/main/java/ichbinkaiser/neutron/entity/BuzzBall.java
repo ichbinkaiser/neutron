@@ -9,31 +9,40 @@ import java.util.Random;
 
 import ichbinkaiser.neutron.activity.GameActivity;
 import ichbinkaiser.neutron.control.Player;
+import lombok.Getter;
 
 public class BuzzBall implements Runnable {
-    Player[] player; // playerCount pointer
-    GameActivity gameActivity;
 
-    int rotation = 0;
-    int type; // buzzBalls type
-    int height, width;
-    boolean dead = false, dying = false;
+    private int height, width;
+    private float gravity = 0.0f;
+    private float climb = 3; // upward force
+    private int xMovement = 0;
+    private float inertia = 0;
+    private int ground; // ground bounce for buzzBalls
 
-    float gravity = 0.0f;
-    float climb = 3; // upward force
-    int xMovement = 0;
+    private Player[] player; // playerCount pointer
+    private GameActivity gameActivity;
+    private Random rnd = new Random();
+    private List<Ball> balls;
+    private List<Ball> ballsCollided = new ArrayList<>(); // array list of balls that have collided with this buzzBalls
 
-    List<Ball> balls;
-    List<Ball> ballsCollided = new ArrayList<>(); // array list of balls that have collided with this buzzBalls
+    @Getter
+    private int type; // buzzBalls type
 
-    Point position = new Point();
-    Point previousPosition = new Point();
+    @Getter
+    private boolean dead = false, dying = false;
 
-    Random rnd = new Random();
+    @Getter
+    private int rotation = 0;
 
-    float inertia = 0;
-    int opacity = 255;
-    int ground; // ground bounce for buzzBalls
+    @Getter
+    private int opacity = 255;
+
+    @Getter
+    private Point position = new Point();
+
+    @Getter
+    private Point previousPosition = new Point();
 
     public BuzzBall(GameActivity gameActivity, int type, int height, int width, List<Ball> balls, Player[] player) {
         this.gameActivity = gameActivity;
@@ -104,7 +113,10 @@ public class BuzzBall implements Runnable {
             }
             ////////////////////// BUZZBALL TO BALL COLLISION DETECTION /////////////////////////////////
             for (Ball ball : balls) {
-                if (ball.position.x >= position.x && ball.position.x <= position.x + width && ball.position.y >= position.y && ball.position.y <= position.y + height) {
+                if (ball.getPosition().x >= position.x
+                        && ball.getPosition().x <= position.x + width
+                        && ball.getPosition().y >= position.y
+                        && ball.getPosition().y <= position.y + height) {
                     boolean collided = false;
                     for (Ball ballCollided : ballsCollided) {
                         if (ballCollided == ball) {
@@ -114,11 +126,11 @@ public class BuzzBall implements Runnable {
 
                     if (!collided && !dying) {
 
-                        if (ball.isGoingLeft) {
-                            ball.isGoingLeft = false;
+                        if (ball.isGoingLeft()) {
+                            ball.setGoingLeft(false);
                             xMovement = 2;
                         } else {
-                            ball.isGoingLeft = true;
+                            ball.setGoingLeft(true);
                             xMovement = -2;
                         }
                         ballsCollided.add(ball);
@@ -142,28 +154,8 @@ public class BuzzBall implements Runnable {
         }
     }
 
-    public int getRotation() {
-        return rotation;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public boolean isDead() {
-        return dead;
-    }
-
     public void kill() {
         this.dead = true;
-    }
-
-    public Point getPosition() {
-        return position;
-    }
-
-    public int getOpacity() {
-        return opacity;
     }
 
 }
