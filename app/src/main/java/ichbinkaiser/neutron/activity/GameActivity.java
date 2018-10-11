@@ -142,7 +142,7 @@ public class GameActivity extends Activity implements SensorEventListener {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        this.wakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "My Tag");
+        this.wakelock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "app:neutron");
         this.wakelock.acquire();
 
         if (getIntent().getIntExtra("BALLS_COUNT", -1) > 0) {
